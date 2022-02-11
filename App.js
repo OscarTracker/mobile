@@ -1,13 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View } from 'react-native'
+import { useState } from 'react'
+import Toggle from './src/components/Toggle.js'
 
 export default function App() {
+  const [active, setActive] = useState(false)
+  const [active2, setActive2] = useState(false)
+
+  // Example
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <StatusBar style={'dark'} />
+      <Toggle
+        active={active}
+        label="Toggle"
+        onPress={() => setActive(!active)}
+        icon="fingersCrossed"
+      />
+      <Text>OI JOAO</Text>
+      <Toggle
+        active={active2}
+        label="Toggle"
+        onPress={() => setActive2(!active2)}
+        icon="oscar"
+      />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -16,5 +34,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#212121',
   },
-});
+})
