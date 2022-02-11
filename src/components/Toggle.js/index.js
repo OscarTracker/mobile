@@ -2,12 +2,12 @@ import { FingersCrossed, Oscar } from '../../assets/icons'
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 
-export default function Toggle({ active, icon, label, ...rest }) {
+export default function Toggle({ active, icon, label, onToggle, ...rest }) {
   const fStyles = styles({ active })
   const activeStyle = active ? 'white' : '#F7B239'
 
   return (
-    <TouchableOpacity style={fStyles.toggle} {...rest}>
+    <TouchableOpacity onPress={onToggle} style={fStyles.toggle} {...rest}>
       {icon === 'oscar' ? (
         <Oscar color={activeStyle} />
       ) : (
@@ -39,12 +39,14 @@ const styles = (props) =>
 
 Toggle.propTypes = {
   active: PropTypes.bool.isRequired,
-  label: PropTypes.string.isRequired,
   icon: PropTypes.node.isRequired,
+  label: PropTypes.string.isRequired,
+  onToggle: PropTypes.func,
 }
 
 Toggle.defaultProps = {
   active: false,
   label: undefined,
   icon: undefined,
+  onToggle: undefined,
 }

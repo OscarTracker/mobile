@@ -14,14 +14,14 @@ export default function App() {
       <Toggle
         active={active}
         label="Toggle"
-        onPress={() => setActive(!active)}
+        onToggle={() => setActive(!active)}
         icon="fingersCrossed"
       />
       <Text>OI JOAO</Text>
       <Toggle
         active={active2}
         label="Toggle"
-        onPress={() => setActive2(!active2)}
+        onToggle={() => setActive2(!active2)}
         icon="oscar"
       />
     </View>
