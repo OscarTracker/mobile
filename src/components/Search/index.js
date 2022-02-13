@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { SearchBar } from 'react-native-elements'
 import PropTypes from 'prop-types'
+import theme from '../../assets/theme'
 
 export default function Search({ onSearch, placeholder, ...rest }) {
   const [search, setSearch] = useState('')
@@ -15,7 +16,7 @@ export default function Search({ onSearch, placeholder, ...rest }) {
     <View style={styles.view}>
       <SearchBar
         containerStyle={{
-          backgroundColor: '#212121',
+          backgroundColor: theme.colors.background,
           padding: 0,
           borderBottomColor: 'transparent',
           borderTopColor: 'transparent',

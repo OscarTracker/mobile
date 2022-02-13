@@ -6,8 +6,9 @@ import { House, Check, Person } from '../assets/icons'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Feed from '../screen/Feed'
 import Account from '../screen/Account'
+import Feed from '../screen/Feed'
+import Watchlist from '../screen/Watchlist'
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -31,7 +32,7 @@ export default function Routes() {
     <NavigationContainer theme={theme}>
       <Stack.Navigator>
         <Stack.Screen
-          name='Navigator'
+          name="Navigator"
           options={{ headerShown: false }}
           initialParams={{ tabOffsetValue }}
         >
@@ -73,7 +74,7 @@ const Navigator = ({ tabOffsetValue }) => {
       }}
     >
       <Tab.Screen
-        name='Feed'
+        name="Feed"
         component={Feed}
         options={{
           headerShown: false,
@@ -101,8 +102,8 @@ const Navigator = ({ tabOffsetValue }) => {
         })}
       />
       <Tab.Screen
-        name='Check'
-        component={Account}
+        name="Check"
+        component={Watchlist}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
@@ -130,7 +131,7 @@ const Navigator = ({ tabOffsetValue }) => {
         })}
       />
       <Tab.Screen
-        name='Account'
+        name="Account"
         component={Account}
         options={{
           headerShown: false,
