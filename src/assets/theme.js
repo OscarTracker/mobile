@@ -3,9 +3,12 @@ export default theme = {
   colors: {
     primary: '#F7B239',
     background: '#212121',
+    item: '#2C2C2C',
     inactive: '#454545',
-    text: 'rgb(28, 28, 30)',
-    border: 'rgb(199, 199, 204)',
-    notification: 'rgb(255, 69, 58)',
+    text: '#FFFFFF',
+    subText: '#A6A6A6',
+    border: '#9C9EAB',
+    blackTransparent: 'rgba(0, 0, 0, .8)',
+    transparent: 'rgba(0, 0, 0, 0)',
   },
 }
