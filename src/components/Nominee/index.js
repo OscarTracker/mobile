@@ -4,6 +4,7 @@ import { Oscar } from '../../assets/icons'
 import PropTypes from 'prop-types'
 import Toggle from '../Toggle'
 import { ImageBackground } from 'react-native'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function Nominee({
   checked,
@@ -15,7 +16,7 @@ export default function Nominee({
   ...rest
 }) {
   return (
-    <View style={styles.view} {...rest}>
+    <TouchableOpacity style={styles.view} {...rest}>
       <View style={styles.image}>
         <ImageBackground
           source={image}
@@ -52,7 +53,7 @@ export default function Nominee({
           )}
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
   },
   view: {
     flexDirection: 'row',
+    width: '100%',
   },
   watchers: {
     flexDirection: 'row',
