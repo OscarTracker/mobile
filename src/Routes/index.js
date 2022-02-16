@@ -9,6 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Account from '../screen/Account'
 import Feed from '../screen/Feed'
 import Watchlist from '../screen/Watchlist'
+import Login from '../screen/Login'
 
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -26,20 +27,142 @@ const getWidth = () => {
 }
 
 export default function Routes() {
-  const tabOffsetValue = useRef(new Animated.Value(0)).current
-
   return (
     <NavigationContainer theme={theme}>
       <Stack.Navigator>
         <Stack.Screen
-          name="Navigator"
+          name='Authentication'
           options={{ headerShown: false }}
-          initialParams={{ tabOffsetValue }}
-        >
-          {(props) => <Navigator {...props} tabOffsetValue={tabOffsetValue} />}
-        </Stack.Screen>
+          component={Authentication}
+        />
+        <Stack.Screen
+          name='Home'
+          options={{ headerShown: false }}
+          component={Home}
+        />
       </Stack.Navigator>
+    </NavigationContainer>
+  )
+}
 
+const Authentication = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='Login'
+        options={{ headerShown: false }}
+        component={Login}
+      />
+    </Stack.Navigator>
+  )
+}
+
+const Home = () => {
+  const tabOffsetValue = useRef(new Animated.Value(0)).current
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarActiveTintColor: theme.colors.primary,
+          tabBarInactiveTintColor: theme.colors.inactive,
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            paddingBottom: 30,
+            height: 80,
+            elevation: 0,
+            borderTopWidth: 0,
+            borderTopColor: theme.colors.inactive,
+            margin: 20,
+          },
+        }}
+      >
+        <Tab.Screen
+          name='Feed'
+          component={Feed}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                }}
+              >
+                <House
+                  color={focused ? theme.colors.primary : theme.colors.inactive}
+                  filled={focused}
+                />
+              </View>
+            ),
+          }}
+          listeners={() => ({
+            tabPress: (e) => {
+              Animated.spring(tabOffsetValue, {
+                toValue: 0,
+                useNativeDriver: true,
+              }).start()
+            },
+          })}
+        />
+        <Tab.Screen
+          name='Check'
+          component={Watchlist}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                }}
+              >
+                <Check
+                  color={focused ? theme.colors.primary : theme.colors.inactive}
+                  background={theme.colors.background}
+                  filled={focused}
+                />
+              </View>
+            ),
+          }}
+          listeners={() => ({
+            tabPress: (e) => {
+              Animated.spring(tabOffsetValue, {
+                toValue: getWidth(),
+                useNativeDriver: true,
+              }).start()
+            },
+          })}
+        />
+        <Tab.Screen
+          name='Account'
+          component={Account}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                }}
+              >
+                <Person
+                  color={focused ? theme.colors.primary : theme.colors.inactive}
+                  filled={focused}
+                />
+              </View>
+            ),
+          }}
+          listeners={() => ({
+            tabPress: (e) => {
+              Animated.spring(tabOffsetValue, {
+                toValue: getWidth() * 2,
+                useNativeDriver: true,
+              }).start()
+            },
+          })}
+        />
+      </Tab.Navigator>
       <Animated.View
         style={{
           width: getWidth() - 110,
@@ -52,112 +175,6 @@ export default function Routes() {
           transform: [{ translateX: tabOffsetValue }],
         }}
       />
-    </NavigationContainer>
-  )
-}
-
-const Navigator = ({ tabOffsetValue }) => {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.inactive,
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          paddingBottom: 30,
-          height: 80,
-          elevation: 0,
-          borderTopWidth: 0,
-          borderTopColor: theme.colors.inactive,
-          margin: 20,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Feed"
-        component={Feed}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                position: 'absolute',
-                top: '50%',
-              }}
-            >
-              <House
-                color={focused ? theme.colors.primary : theme.colors.inactive}
-                filled={focused}
-              />
-            </View>
-          ),
-        }}
-        listeners={() => ({
-          tabPress: (e) => {
-            Animated.spring(tabOffsetValue, {
-              toValue: 0,
-              useNativeDriver: true,
-            }).start()
-          },
-        })}
-      />
-      <Tab.Screen
-        name="Check"
-        component={Watchlist}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                position: 'absolute',
-                top: '50%',
-              }}
-            >
-              <Check
-                color={focused ? theme.colors.primary : theme.colors.inactive}
-                background={theme.colors.background}
-                filled={focused}
-              />
-            </View>
-          ),
-        }}
-        listeners={() => ({
-          tabPress: (e) => {
-            Animated.spring(tabOffsetValue, {
-              toValue: getWidth(),
-              useNativeDriver: true,
-            }).start()
-          },
-        })}
-      />
-      <Tab.Screen
-        name="Account"
-        component={Account}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <View
-              style={{
-                position: 'absolute',
-                top: '50%',
-              }}
-            >
-              <Person
-                color={focused ? theme.colors.primary : theme.colors.inactive}
-                filled={focused}
-              />
-            </View>
-          ),
-        }}
-        listeners={() => ({
-          tabPress: (e) => {
-            Animated.spring(tabOffsetValue, {
-              toValue: getWidth() * 2,
-              useNativeDriver: true,
-            }).start()
-          },
-        })}
-      />
-    </Tab.Navigator>
+    </View>
   )
 }
