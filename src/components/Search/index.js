@@ -20,7 +20,7 @@ export default function Search({ onSearch, placeholder, ...rest }) {
           padding: 0,
           borderBottomColor: 'transparent',
           borderTopColor: 'transparent',
-          paddingHorizontal: 20, // change here
+          paddingVertical: 20, // change here
         }}
         onChangeText={updateSearch}
         placeholder={placeholder}
