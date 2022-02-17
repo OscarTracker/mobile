@@ -1,25 +1,17 @@
-import { StyleSheet, View } from 'react-native'
-import { useState } from 'react'
-import Toggle from '../../components/Toggle'
+import { StyleSheet, View, Button, Text } from 'react-native'
 
-export default function Account() {
-  const [active, setActive] = useState(false)
-  const [active2, setActive2] = useState(false)
+import { signOut, useAuth } from '../../../firebase'
 
+export default function Account({ navigation }) {
+  const currentUser = useAuth()
+  const logOut = () => {
+    signOut()
+    navigation.navigate('Authentication')
+  }
   return (
     <View style={styles.container}>
-      <Toggle
-        active={active}
-        label='Toggle'
-        onPress={() => setActive(!active)}
-        icon='fingersCrossed'
-      />
-      <Toggle
-        active={active2}
-        label='Toggle'
-        onPress={() => setActive2(!active2)}
-        icon='oscar'
-      />
+      <Text>email: {currentUser?.email}</Text>
+      <Button title='logout' onPress={() => logOut()}></Button>
     </View>
   )
 }

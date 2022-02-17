@@ -1,25 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { useState } from 'react'
-import Toggle from '../../components/Toggle'
+import Search from '../../components/Search'
 
 export default function Watchlist() {
-  const [active, setActive] = useState(false)
-  const [active2, setActive2] = useState(false)
-
   return (
     <View style={styles.container}>
-      <Toggle
-        active={active}
-        label='Toggle'
-        onPress={() => setActive(!active)}
-        icon='fingersCrossed'
-      />
-      <Toggle
-        active={active2}
-        label='Toggle'
-        onPress={() => setActive2(!active2)}
-        icon='oscar'
-      />
+      <Search placeholder="Search Movie" onSearch={(s) => console.log(s)} />
     </View>
   )
 }

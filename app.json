@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Oscar Tracker",
-    "slug": "Oscar Tracker",
+    "slug": "oscar_tracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
