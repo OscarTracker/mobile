@@ -69,4 +69,18 @@ const signOut = async () => {
     .catch((error) => {})
 }
 
-export { signUp, signIn, signOut, useAuth }
+const getMovies = async () => {
+  let data = []
+
+  await getDocs(collection(db, 'movies')).then((querySnapshot) => {
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data())
+      })
+    }
+  })
+
+  return data
+}
+
+export { signUp, signIn, signOut, useAuth, getMovies }

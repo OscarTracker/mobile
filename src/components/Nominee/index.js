@@ -1,85 +1,86 @@
 import { Avatar, Icon } from 'react-native-elements'
-import { Image, StyleSheet, Text, View } from 'react-native'
-import { Oscar } from '../../assets/icons'
+import { StyleSheet, Text, View } from 'react-native'
 import PropTypes from 'prop-types'
 import Toggle from '../Toggle'
 import { ImageBackground } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import SkeletonContent from 'react-native-skeleton-content'
+import theme from '../../assets/theme'
 
 export default function Nominee({
   checked,
   image,
-  isLoading,
-  predict,
   subtitle,
   title,
   watchers,
-  ...rest
+  ...props
 }) {
+  const getImage = () => {
+    if (image) {
+      return (
+        <ImageBackground
+          source={image}
+          style={{ width: '100%', height: '100%' }}
+          imageStyle={{ borderRadius: 12 }}
+        >
+          {checked && (
+            <View style={styles.checked}>
+              <Icon name='check-circle' color='white' />
+            </View>
+          )}
+        </ImageBackground>
+      )
+    } else {
+      return (
+        <ImageBackground
+          style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: theme.colors.spoiler,
+            borderRadius: 12,
+          }}
+        >
+          {checked && (
+            <View style={styles.checked}>
+              <Icon name='check-circle' color='white' />
+            </View>
+          )}
+        </ImageBackground>
+      )
+    }
+  }
   return (
-    <SkeletonContent
-      containerStyle={{ flex: 1, flexDirection: 'row', borderRadius: 20 }}
-      isLoading={isLoading}
-      boneColor="#2C2C2C"
-      highlightColor="#454545"
-      layout={[
-        { key: 'someId', width: '100%', height: 130, marginBottom: 20 },
-        // {
-        //   key: 'someId2',
-        //   width: 10,
-        //   height: 158,
-        //   marginBottom: 20,
-        //   marginLeft: 20,
-        // },
-      ]}
-    >
-      <TouchableOpacity style={styles.view} {...rest}>
-        <View style={styles.image}>
-          <ImageBackground
-            source={image}
-            style={{ width: '100%', height: '100%' }}
-            imageStyle={{ borderRadius: 12 }}
-          >
-            {checked && (
-              <View style={styles.checked}>
-                <Icon name="check-circle" color="white" />
-              </View>
-            )}
-          </ImageBackground>
+    <TouchableOpacity style={styles.container} {...props}>
+      <View style={styles.image}>{getImage()}</View>
+      <View style={styles.content}>
+        <View>
+          <Text numberOfLines={3} style={styles.title}>
+            {title}
+          </Text>
+          <Text style={styles.subtitle}>{subtitle}</Text>
         </View>
-        <View style={styles.content}>
-          <View>
-            <Text numberOfLines={2} style={styles.title}>
-              {title}
-            </Text>
-            <Text style={styles.subtitle}>{subtitle}</Text>
-          </View>
+        {watchers && (
           <View style={styles.watchers}>
-            {predict ? (
-              <View style={styles.toggles}>
-                <Toggle label="I wish" icon="fingersCrossed" />
-                <Toggle label="I bet" icon="oscar" />
-              </View>
-            ) : (
-              watchers.map((watcher, i) => (
-                <Avatar
-                  // key={`${watcher}-${i}`}
-                  containerStyle={styles.avatar}
-                  size={42}
-                  rounded
-                  source={watcher}
-                />
-              ))
-            )}
+            {watchers.map((watcher, index) => (
+              <Avatar
+                key={index}
+                containerStyle={styles.avatar}
+                size={40}
+                rounded
+                source={watcher}
+              />
+            ))}
           </View>
-        </View>
-      </TouchableOpacity>
-    </SkeletonContent>
+        )}
+      </View>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    marginBottom: 16,
+  },
   checked: {
     position: 'absolute',
     top: 0,
@@ -89,18 +90,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    borderRadius: 12,
+    borderRadius: 10,
   },
   content: {
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    paddingVertical: 30,
+    flex: 1,
+    justifyContent: 'center',
     paddingLeft: 20,
-  },
-  view: {
-    flexDirection: 'row',
-    width: '100%',
-    marginBottom: 16,
   },
   watchers: {
     marginTop: 12,
@@ -113,21 +108,18 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   title: {
-    color: 'white',
+    color: theme.colors.text,
     fontSize: 18,
     fontWeight: '400',
-    marginBottom: 12,
+    marginBottom: 4,
   },
   subtitle: {
-    color: 'white',
+    color: theme.colors.subText,
     fontSize: 14,
     fontWeight: '100',
   },
   avatar: {
     marginRight: 16,
-  },
-  toggles: {
-    // flexDirection: 'row',
   },
 })
 

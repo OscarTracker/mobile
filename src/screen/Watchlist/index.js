@@ -1,80 +1,138 @@
 import {
   FlatList,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
+  ScrollView,
+  Animated,
 } from 'react-native'
 import Nominee from '../../components/Nominee'
-import kratos from '../../assets/avatar.jpg'
-import power from '../../assets/power.png'
-import space from '../../assets/space.jpg'
-import nominees from '../../../movies.json'
-import Search from '../../components/Search'
-import { useState } from 'react'
-import filter from 'lodash.filter'
+import Input from '../../components/Input'
+import { useState, useEffect } from 'react'
+import { getMovies } from '../../../firebase'
+import theme from '../../assets/theme'
 
 export default function Feed() {
-  const [data, setData] = useState(nominees)
-  const [filteredData, setFilteredData] = useState(nominees)
+  const [data, setData] = useState([])
+  const [filteredData, setFilteredData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const movies = await getMovies()
+      setData(movies)
+      setFilteredData(movies)
+      setLoading(false)
+    }
+
+    fetchData()
+  }, [setData, setFilteredData])
 
   const handleSearch = (text) => {
+    setSearch(text)
     if (text === '') {
       setFilteredData(data)
       return
     }
-    const formattedQuery = text.toLowerCase()
+    const formattedQuery = text
+      .toLowerCase()
+      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
 
-    const newFilteredData = filter(data, (nominee) => {
-      return nominee.name.toLowerCase().includes(formattedQuery)
+    const newFilteredData = data.filter((nominee) => {
+      return nominee.name
+        .toLowerCase()
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
+        .includes(formattedQuery)
     })
 
     setFilteredData(newFilteredData)
   }
 
+  let AnimatedHeaderValue = new Animated.Value(0)
+  const Header_Max_Heigth = 100
+  const Header_Min_Heigth = 75
+
+  const animateHeaderHeight = AnimatedHeaderValue.interpolate({
+    inputRange: [0, Header_Max_Heigth - Header_Min_Heigth],
+    outputRange: [Header_Max_Heigth, Header_Min_Heigth],
+    extrapolate: 'clamp',
+  })
+
+  const animateFontSize = AnimatedHeaderValue.interpolate({
+    inputRange: [0, Header_Max_Heigth - Header_Min_Heigth],
+    outputRange: [30, 20],
+    extrapolate: 'clamp',
+  })
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Watch List</Text>
-      <Search
-        onClear={() => setData(nominees)}
-        onSearch={handleSearch}
-        placeholder="Search Movie"
-      />
-      <FlatList
-        data={filteredData}
-        keyExtractor={(nominee) => nominee.movie}
-        renderItem={({ item }) => (
-          <Nominee
-            // key={item.name}
-            image={power}
-            watchers={[kratos, space]}
-            title={item.name}
-            subtitle={`${item.nominations.length} ${
-              item.nominations.length === 1 ? 'Nomination' : 'Nominations'
-            }`}
+      <Animated.View style={[styles.header, { height: animateHeaderHeight }]}>
+        <Animated.Text style={[styles.title, { fontSize: animateFontSize }]}>
+          Watch List
+        </Animated.Text>
+      </Animated.View>
 
-            // MUDAR AQUI P VER O SKELETON
-            // isLoading
-
-            // Pra colocar o toggle, porem o estilo ta fudido :/ por causa dos icons acho, mas n arrumei
-            // predict
-
-            // Marca checked o nominee
-            // checked
-          />
+      <ScrollView
+        scrollEventThrottle={1}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: AnimatedHeaderValue } } }],
+          { useNativeDriver: false }
         )}
-      />
+      >
+        <View style={styles.content}>
+          <Input
+            onChangeText={(text) => handleSearch(text)}
+            value={search}
+            leftIcon={'search'}
+            rightIcon={'search'}
+            placeholder='Search Movie'
+          />
+          <View style={styles.itens}>
+            {filteredData.map((item) => {
+              return (
+                <Nominee
+                  key={item.uid}
+                  title={item.name}
+                  subtitle={`${item.nominations?.length} ${
+                    item.nominations?.length === 1
+                      ? 'nomination'
+                      : 'nominations'
+                  }`}
+                />
+              )
+            })}
+          </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    paddingHorizontal: 20,
+  },
+  header: {
+    marginTop: 30,
+    justifyContent: 'center',
+  },
+  itens: {
+    paddingTop: 20,
+  },
   container: {
     flex: 1,
-    margin: 20,
+  },
+  content: {
+    padding: 20,
   },
   title: {
+    alignContent: 'center',
+    textAlign: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+
     fontSize: 30,
     fontWeight: '400',
     color: 'white',

@@ -1,11 +1,12 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import { View, LogBox, Dimensions, Animated } from 'react-native'
 import { setStatusBarStyle } from 'expo-status-bar'
-import theme from '../assets/theme'
-import { House, Check, Person } from '../assets/icons'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import theme from '../assets/theme'
+
+import Icons from '../components/Icons'
 import Account from '../screen/Account'
 import Feed from '../screen/Feed'
 import Watchlist from '../screen/Watchlist'
@@ -14,6 +15,7 @@ import Login from '../screen/Login'
 LogBox.ignoreLogs([
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
   'Non-serializable values were found in the navigation state',
+  'AsyncStorage has been extracted from react-native core',
 ])
 
 const Stack = createStackNavigator()
@@ -21,14 +23,13 @@ const Tab = createBottomTabNavigator()
 setStatusBarStyle('light')
 
 const getWidth = () => {
-  let width = Dimensions.get('window').width
-  width = width - 40
+  let width = Dimensions.get('window').width - 40
   return width / 3
 }
 
 export default function Routes() {
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} initial>
       <Stack.Navigator>
         <Stack.Screen
           name='Authentication'
@@ -63,17 +64,20 @@ const Home = () => {
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
+        initialRouteName='Check'
         screenOptions={{
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
+          tabBarHideOnKeyboard: 'true',
           tabBarShowLabel: false,
           tabBarStyle: {
+            paddingHorizontal: 20,
             paddingBottom: 30,
             height: 80,
+            zIndex: 300,
             elevation: 0,
             borderTopWidth: 0,
             borderTopColor: theme.colors.inactive,
-            margin: 20,
           },
         }}
       >
@@ -89,9 +93,12 @@ const Home = () => {
                   top: '50%',
                 }}
               >
-                <House
+                <Icons
+                  name='home'
                   color={focused ? theme.colors.primary : theme.colors.inactive}
                   filled={focused}
+                  height={24}
+                  width={24}
                 />
               </View>
             ),
@@ -99,7 +106,7 @@ const Home = () => {
           listeners={() => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: 0,
+                toValue: -getWidth(),
                 useNativeDriver: true,
               }).start()
             },
@@ -117,10 +124,12 @@ const Home = () => {
                   top: '50%',
                 }}
               >
-                <Check
+                <Icons
+                  name='check'
                   color={focused ? theme.colors.primary : theme.colors.inactive}
-                  background={theme.colors.background}
                   filled={focused}
+                  height={24}
+                  width={24}
                 />
               </View>
             ),
@@ -128,7 +137,7 @@ const Home = () => {
           listeners={() => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: getWidth(),
+                toValue: 0,
                 useNativeDriver: true,
               }).start()
             },
@@ -146,9 +155,12 @@ const Home = () => {
                   top: '50%',
                 }}
               >
-                <Person
+                <Icons
+                  name='person'
                   color={focused ? theme.colors.primary : theme.colors.inactive}
                   filled={focused}
+                  height={24}
+                  width={24}
                 />
               </View>
             ),
@@ -156,7 +168,7 @@ const Home = () => {
           listeners={() => ({
             tabPress: (e) => {
               Animated.spring(tabOffsetValue, {
-                toValue: getWidth() * 2,
+                toValue: getWidth(),
                 useNativeDriver: true,
               }).start()
             },
@@ -165,13 +177,13 @@ const Home = () => {
       </Tab.Navigator>
       <Animated.View
         style={{
-          width: getWidth() - 110,
+          width: 10,
+          alignSelf: 'center',
           height: 4,
           borderRadius: 5,
           backgroundColor: theme.colors.primary,
           position: 'absolute',
-          bottom: 35,
-          left: 75,
+          bottom: 20,
           transform: [{ translateX: tabOffsetValue }],
         }}
       />
