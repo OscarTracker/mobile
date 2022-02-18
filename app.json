@@ -4,6 +4,10 @@
     "slug": "oscar_tracker",
     "version": "1.0.0",
     "orientation": "portrait",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "json", "wasm", "svg"]
+    },
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -21,7 +25,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#212121"
-      }
+      },
+      "package": "com.joaofleao.oscar_tracker"
     },
     "web": {
       "favicon": "./assets/favicon.png"

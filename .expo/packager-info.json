@@ -1,9 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 10872,
-  "expoServerNgrokUrl": "https://yb-c7d.anonymous.mobile.exp.direct",
-  "packagerNgrokUrl": "https://packager.yb-c7d.anonymous.mobile.exp.direct",
-  "ngrokPid": 18588
+  "expoServerPort": null,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "webpackServerPort": null
 }
