@@ -34,12 +34,15 @@ export default function Login({ navigation }) {
           onChangeText={setEmail}
           value={email}
           placeholder='Email'
+          autoCapitalize='none'
         />
 
         <Input
           onChangeText={setPassword}
           value={password}
           placeholder='Password'
+          secureTextEntry={true}
+          autoCapitalize='none'
         />
       </View>
 
