@@ -27,22 +27,24 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     maxWidth: '100%',
     width: '100%',
+    paddingVertical: 12,
     paddingHorizontal: 16,
   },
   input: {
     fontSize: 16,
     paddingHorizontal: 10,
-    paddingVertical: 8,
     color: theme.colors.border,
   },
 })
 
 Input.propTypes = {
-  onSearch: PropTypes.func,
-  placeholder: PropTypes.string,
+  leftIcon: PropTypes.string,
+  inputStyle: PropTypes.object,
+  style: PropTypes.object,
 }
 
 Input.defaultProps = {
-  onSearch: undefined,
-  placeholder: undefined,
+  leftIcon: undefined,
+  inputStyle: undefined,
+  style: undefined,
 }
