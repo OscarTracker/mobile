@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Button,
-  KeyboardAvoidingView,
-} from 'react-native'
+import { StyleSheet, View, TextInput, SafeAreaView, Image } from 'react-native'
+
+import Button from '../../components/Button'
+import Input from '../../components/Input'
+import logomark from '../../../assets/logomark.png'
 
 import { signUp, signIn, useAuth } from '../../../firebase'
 
@@ -27,40 +25,56 @@ export default function Login({ navigation }) {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior='padding'>
-      <TextInput
-        style={styles.input}
-        onChangeText={setEmail}
-        value={email}
-        placeholder='Email'
-      />
-      <TextInput
-        style={styles.input}
-        onChangeText={setPassword}
-        value={password}
-        type={'password'}
-        placeholder='Password'
-      />
+    <SafeAreaView style={styles.container} behavior='padding'>
+      <Image source={logomark} style={styles.image} />
 
-      <Button title='Login' onPress={() => handleLogin()} />
-      <Button title='Register' onPress={() => handleSignUp()} />
-      <Button title='Teste' onPress={() => console.log(currentUser)} />
-    </KeyboardAvoidingView>
+      <View style={styles.inputs}>
+        <Input
+          style={styles.input}
+          onChangeText={setEmail}
+          value={email}
+          placeholder='Email'
+        />
+
+        <Input
+          onChangeText={setPassword}
+          value={password}
+          placeholder='Password'
+        />
+      </View>
+
+      <View style={styles.buttons}>
+        <Button
+          style={styles.button}
+          title='Login'
+          onPress={() => handleLogin()}
+        />
+        <Button bordered title='Register' onPress={() => handleSignUp()} />
+      </View>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    margin: 20,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  inputs: {
+    width: '100%',
+    marginBottom: 50,
+  },
   input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    backgroundColor: 'white',
-    width: 300,
+    marginBottom: 26,
+  },
+  button: {
+    marginBottom: 20,
+  },
+  image: {
+    width: 206,
+    height: 102,
+    marginBottom: 115,
   },
 })

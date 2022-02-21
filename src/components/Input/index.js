@@ -3,16 +3,16 @@ import PropTypes from 'prop-types'
 import theme from '../../assets/theme'
 import Icons from '../Icons'
 
-export default function Input({ leftIcon, rightIcon, ...props }) {
+export default function Input({ leftIcon, inputStyle, style, ...props }) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {leftIcon && (
         <Icons color={theme.colors.border} width={16} name={leftIcon} />
       )}
       <TextInput
         {...props}
         placeholderTextColor={theme.colors.border}
-        style={styles.input}
+        style={[styles.input, inputStyle]}
       />
     </View>
   )
@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 14,
     maxWidth: '100%',
+    width: '100%',
     paddingHorizontal: 16,
   },
   input: {

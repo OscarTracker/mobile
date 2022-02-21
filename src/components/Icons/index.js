@@ -6,6 +6,7 @@ import Home from '../../assets/icons/home.svg'
 import PersonFilled from '../../assets/icons/personFilled.svg'
 import Person from '../../assets/icons/person.svg'
 import QuestionMark from '../../assets/icons/questionMark.svg'
+import None from '../../assets/icons/none.svg'
 
 export default function Icons({ name, filled, color, ...props }) {
   switch (name) {
@@ -23,6 +24,9 @@ export default function Icons({ name, filled, color, ...props }) {
     case 'person':
       if (filled) return <PersonFilled style={{ color: color }} {...props} />
       else return <Person style={{ color: color }} {...props} />
+
+    case 'none':
+      return <None />
 
     default:
       return <QuestionMark style={{ color: color }} {...props} />
