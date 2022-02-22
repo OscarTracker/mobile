@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 
-export default function Watchlist() {
+export default function Feed() {
   return <View style={styles.container}></View>
 }
 

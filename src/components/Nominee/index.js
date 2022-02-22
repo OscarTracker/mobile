@@ -1,9 +1,8 @@
 import { Avatar, Icon } from 'react-native-elements'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import Toggle from '../Toggle'
 import { ImageBackground } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import theme from '../../assets/theme'
 
 export default function Nominee({

@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react'
 import { getMovies } from '../../../firebase'
 import theme from '../../assets/theme'
 
-export default function Feed() {
+export default function Watchlist() {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [loading, setLoading] = useState(true)
@@ -93,7 +93,7 @@ export default function Feed() {
             {filteredData.map((item) => {
               return (
                 <Nominee
-                  key={item.uid}
+                  key={item.imdbId}
                   title={item.name}
                   subtitle={`${item.nominations?.length} ${
                     item.nominations?.length === 1

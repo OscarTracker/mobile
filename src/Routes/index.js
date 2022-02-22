@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react'
-import { View, LogBox, Dimensions, Animated } from 'react-native'
+import { View, Dimensions, Animated, LogBox } from 'react-native'
 import { setStatusBarStyle } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import theme from '../assets/theme'
 
@@ -12,13 +12,9 @@ import Feed from '../screen/Feed'
 import Watchlist from '../screen/Watchlist'
 import Login from '../screen/Login'
 
-LogBox.ignoreLogs([
-  "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
-  'Non-serializable values were found in the navigation state',
-  'AsyncStorage has been extracted from react-native core',
-])
+LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core'])
 
-const Stack = createStackNavigator()
+const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 setStatusBarStyle('light')
 

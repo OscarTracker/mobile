@@ -4,6 +4,7 @@ export default theme = {
     primary: '#F7B239',
     background: '#212121',
     spoiler: '#2C2C2C',
+    input: '#323232',
     inactive: '#454545',
     border: '#7A7A7A',
     text: '#FFFFFF',

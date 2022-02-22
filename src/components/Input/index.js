@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: theme.colors.border,
-    borderWidth: 1,
+    backgroundColor: theme.colors.input,
     borderRadius: 14,
     maxWidth: '100%',
     width: '100%',
