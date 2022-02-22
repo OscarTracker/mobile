@@ -17,9 +17,16 @@ import { signUp } from '../../../../firebase'
 
 export default function RegistrationImage({ route, navigation }) {
   const [image, setImage] = useState(null)
+  const { email, password, name, nickname } = route.params
+
+  const handleSkip = async () => {
+    signUp(email, password, name, nickname)
+    navigation.navigate('Home')
+  }
 
   const handleFinish = async () => {
-    const { email, password, name, nickname } = route.params
+    signUp(email, password, name, nickname, image)
+    navigation.navigate('Home')
   }
 
   const pickImage = async () => {
@@ -61,7 +68,7 @@ export default function RegistrationImage({ route, navigation }) {
           style={styles.button}
           title='Skip'
           bordered
-          onPress={() => handleFinish()}
+          onPress={() => handleSkip()}
         />
         <Button
           style={styles.button}
