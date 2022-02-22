@@ -1,19 +1,47 @@
-import { StyleSheet, View, TextInput } from 'react-native'
+import { useState } from 'react'
+import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import theme from '../../assets/theme'
 import Icons from '../Icons'
 
-export default function Input({ leftIcon, inputStyle, style, ...props }) {
+export default function Input({
+  leftIcon,
+  inputStyle,
+  style,
+  password,
+  simplified,
+  ...props
+}) {
+  const [showPassword, setShowPassword] = useState(password)
+
+  const getStyle = () => {
+    if (simplified) return [styles.container, styles.simplifiedContainer, style]
+    return [styles.container, styles.defaultContainer, style]
+  }
+  const getInputStyle = () => {
+    return [styles.input, inputStyle]
+  }
+
   return (
-    <View style={[styles.container, style]}>
-      {leftIcon && (
-        <Icons color={theme.colors.border} width={16} name={leftIcon} />
-      )}
+    <View style={getStyle()}>
+      {leftIcon && <Icons style={styles.leftIcon} width={16} name={leftIcon} />}
+
       <TextInput
-        {...props}
+        secureTextEntry={showPassword}
         placeholderTextColor={theme.colors.border}
-        style={[styles.input, inputStyle]}
+        style={getInputStyle()}
+        {...props}
       />
+
+      {password && (
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Icons
+            style={styles.rightIcon}
+            width={20}
+            name={showPassword ? 'eye' : 'eye-off'}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   )
 }
@@ -22,17 +50,34 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.input,
-    borderRadius: 14,
     maxWidth: '100%',
     width: '100%',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
   },
   input: {
     fontSize: 16,
-    paddingHorizontal: 10,
+    flex: 1,
+    color: theme.colors.text,
+  },
+  defaultContainer: {
+    backgroundColor: theme.colors.input,
+    borderRadius: 14,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
+  simplifiedContainer: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.border,
+    paddingVertical: 10,
+  },
+  leftIcon: {
     color: theme.colors.border,
+    marginRight: 10,
+  },
+  rightIcon: {
+    color: theme.colors.border,
+    marginLeft: 10,
   },
 })
 

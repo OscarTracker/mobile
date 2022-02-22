@@ -5,7 +5,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import logomark from '../../../assets/logomark.png'
 
-import { signUp, signIn, useAuth } from '../../../firebase'
+import { signIn, useAuth } from '../../../firebase'
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
@@ -21,7 +21,7 @@ export default function Login({ navigation }) {
   }
 
   const handleSignUp = async () => {
-    signUp(email, password)
+    navigation.navigate('RegistrationEmail')
   }
 
   return (
@@ -41,7 +41,7 @@ export default function Login({ navigation }) {
           onChangeText={setPassword}
           value={password}
           placeholder='Password'
-          secureTextEntry={true}
+          password
           autoCapitalize='none'
         />
       </View>

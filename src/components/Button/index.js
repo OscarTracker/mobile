@@ -8,25 +8,28 @@ export default function Button({
   title,
   textStyle,
   style,
-  filled = true,
+  disabled,
   bordered,
   ...props
 }) {
   const getStyle = () => {
+    if (disabled) return [styles.container, styles.disabledContainer, style]
     if (bordered) return [styles.container, styles.borderedContainer, style]
-    if (filled) return [styles.container, styles.filledContainer, style]
+    return [styles.container, styles.filledContainer, style]
   }
   const getTextStyle = () => {
+    if (disabled) return [styles.text, styles.disabledText, textStyle]
     if (bordered) return [styles.text, styles.borderedText, textStyle]
-    if (filled) return [styles.text, styles.filledText, textStyle]
+    return [styles.text, styles.filledText, textStyle]
   }
 
   const getColor = () => {
+    if (disabled) return theme.colors.border
     if (bordered) return theme.colors.primary
-    if (filled) return theme.colors.text
+    return theme.colors.text
   }
   return (
-    <TouchableOpacity style={getStyle()} {...props}>
+    <TouchableOpacity style={getStyle()} {...props} disabled={disabled}>
       <Icons color={getColor()} width={16} name={leftIcon} />
       <Text style={getTextStyle()}>{title}</Text>
       <Icons color={getColor()} width={16} name={rightIcon} />
@@ -62,5 +65,12 @@ const styles = StyleSheet.create({
   },
   borderedText: {
     color: theme.colors.primary,
+  },
+  disabledContainer: {
+    backgroundColor: theme.colors.spoiler,
+    borderColor: theme.colors.spoiler,
+  },
+  disabledText: {
+    color: theme.colors.border,
   },
 })
