@@ -5,7 +5,10 @@ import HomeFilled from '../../assets/icons/homeFilled.svg'
 import Home from '../../assets/icons/home.svg'
 import PersonFilled from '../../assets/icons/personFilled.svg'
 import Person from '../../assets/icons/person.svg'
+import EyeOff from '../../assets/icons/eye-off.svg'
+import Eye from '../../assets/icons/eye.svg'
 import QuestionMark from '../../assets/icons/questionMark.svg'
+import Camera from '../../assets/icons/camera.svg'
 import None from '../../assets/icons/none.svg'
 
 export default function Icons({ name, filled, color, ...props }) {
@@ -24,6 +27,15 @@ export default function Icons({ name, filled, color, ...props }) {
     case 'person':
       if (filled) return <PersonFilled style={{ color: color }} {...props} />
       else return <Person style={{ color: color }} {...props} />
+
+    case 'eye-off':
+      return <EyeOff style={{ color: color }} {...props} />
+
+    case 'eye':
+      return <Eye style={{ color: color }} {...props} />
+
+    case 'camera':
+      return <Camera style={{ color: color }} {...props} />
 
     case 'none':
       return <None />

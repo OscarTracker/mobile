@@ -8,7 +8,9 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth'
 
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
+import { doc, setDoc } from 'firebase/firestore'
+import { getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 
 // Your web app's Firebase configuration
@@ -27,6 +29,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 const db = getFirestore(app)
+const storage = getStorage()
 
 const useAuth = () => {
   const [currentUser, setCurrentUser] = useState()
@@ -37,16 +40,31 @@ const useAuth = () => {
   return currentUser
 }
 
-const signUp = async (email, password) => {
+const uploadImage = async (url, uid) => {
+  const storageRef = ref(storage, `avatars/${uid}.png`)
+
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => uploadBytes(storageRef, blob))
+}
+
+const signUp = async (email, password, name, nickname, image) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
+      if (image) uploadImage(image, user.uid)
+      const docData = {
+        email: user.email,
+        name: name,
+        nickname: nickname,
+      }
+      setDoc(doc(db, 'users', user.uid), docData).catch((error) => {
+        console.log(error)
+      })
     })
     .catch((error) => {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.log(errorCode)
-      console.log(errorMessage)
+      console.log(error.code)
+      console.log(error.message)
     })
 }
 

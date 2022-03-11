@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react'
-import { View, Dimensions, Animated, LogBox } from 'react-native'
+import React, { useRef, useEffect, useState } from 'react'
+import { View, Dimensions, Animated, LogBox, Keyboard } from 'react-native'
 import { setStatusBarStyle } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -11,6 +11,10 @@ import Account from '../screen/Account'
 import Feed from '../screen/Feed'
 import Watchlist from '../screen/Watchlist'
 import Login from '../screen/Login'
+import RegistrationEmail from '../screen/Registration/Email'
+import RegistrationPassword from '../screen/Registration/Password'
+import RegistrationName from '../screen/Registration/Name'
+import RegistrationImage from '../screen/Registration/Image'
 
 LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core'])
 
@@ -26,17 +30,13 @@ const getWidth = () => {
 export default function Routes() {
   return (
     <NavigationContainer theme={theme} initial>
-      <Stack.Navigator>
-        <Stack.Screen
-          name='Authentication'
-          options={{ headerShown: false }}
-          component={Authentication}
-        />
-        <Stack.Screen
-          name='Home'
-          options={{ headerShown: false }}
-          component={Home}
-        />
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name='Authentication' component={Authentication} />
+        <Stack.Screen name='Home' component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   )
@@ -44,18 +44,40 @@ export default function Routes() {
 
 const Authentication = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name='Login' component={Login} />
+      <Stack.Screen name='RegistrationEmail' component={RegistrationEmail} />
       <Stack.Screen
-        name='Login'
-        options={{ headerShown: false }}
-        component={Login}
+        name='RegistrationPassword'
+        component={RegistrationPassword}
       />
+      <Stack.Screen name='RegistrationName' component={RegistrationName} />
+      <Stack.Screen name='RegistrationImage' component={RegistrationImage} />
     </Stack.Navigator>
   )
 }
 
 const Home = () => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current
+  const [keyboardVisible, setKeyboardVisible] = useState(undefined)
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardVisible(true)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardVisible(false)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
 
   return (
     <View style={{ flex: 1 }}>
@@ -171,18 +193,20 @@ const Home = () => {
           })}
         />
       </Tab.Navigator>
-      <Animated.View
-        style={{
-          width: 10,
-          alignSelf: 'center',
-          height: 4,
-          borderRadius: 5,
-          backgroundColor: theme.colors.primary,
-          position: 'absolute',
-          bottom: 20,
-          transform: [{ translateX: tabOffsetValue }],
-        }}
-      />
+      {!keyboardVisible && (
+        <Animated.View
+          style={{
+            width: 10,
+            alignSelf: 'center',
+            height: 4,
+            borderRadius: 5,
+            backgroundColor: theme.colors.primary,
+            position: 'absolute',
+            bottom: 20,
+            transform: [{ translateX: tabOffsetValue }],
+          }}
+        />
+      )}
     </View>
   )
 }
