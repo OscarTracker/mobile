@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth'
 
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite'
+import { getFirestore, collection, getDocs } from 'firebase/firestore'
 import { doc, setDoc } from 'firebase/firestore'
 import { getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
@@ -40,24 +40,26 @@ const useAuth = () => {
   return currentUser
 }
 
-const uploadImage = async (image, uid) => {
-  const storageRef = ref(storage, `avatars/${uid}`)
+const uploadImage = async (url, uid) => {
+  const storageRef = ref(storage, `avatars/${uid}.png`)
 
-  uploadBytes(storageRef, image).then((snapshot) => {
-    console.log('Uploaded a blob or file!')
-  })
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => uploadBytes(storageRef, blob))
 }
 
 const signUp = async (email, password, name, nickname, image) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
-      // if (image) uploadImage(image, user.uid)
-      setDoc(doc(db, 'users', user.uid), {
+      if (image) uploadImage(image, user.uid)
+      const docData = {
         email: user.email,
         name: name,
         nickname: nickname,
-        // image: image,
+      }
+      setDoc(doc(db, 'users', user.uid), docData).catch((error) => {
+        console.log(error)
       })
     })
     .catch((error) => {
