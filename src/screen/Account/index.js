@@ -40,6 +40,11 @@ export default function Account({ navigation }) {
       setNickname(user.nickname)
       const avatar = await getAvatar(user.uid)
       setImage(avatar)
+
+      setShowPlot(user.preferences.showPlot)
+      setShowCast(user.preferences.showCast)
+      setShowPoster(user.preferences.showPoster)
+      setShowRatings(user.preferences.showRatings)
     }
     fetchData()
   }, [])

@@ -6,8 +6,8 @@ export default function SimpleToggle({ active, setActive, disabled }) {
   const tabOffsetValue = useRef(new Animated.Value(0)).current
 
   const getWidth = () => {
-    if (active) return 0
-    return 19
+    if (active) return 19
+    return 0
   }
 
   const toggle = () => {
@@ -27,6 +27,7 @@ export default function SimpleToggle({ active, setActive, disabled }) {
         style={[
           styles.focused,
           {
+            left: getWidth(),
             backgroundColor: active
               ? theme.colors.primary
               : theme.colors.disabled,

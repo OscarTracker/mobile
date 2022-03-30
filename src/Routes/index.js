@@ -21,6 +21,7 @@ import UserProvider from '../context/UserContext'
 LogBox.ignoreLogs([
   'AsyncStorage has been extracted from react-native core',
   'Setting a timer',
+  'Remote debugger',
 ])
 
 const Stack = createNativeStackNavigator()
