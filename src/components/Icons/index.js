@@ -8,7 +8,10 @@ import Person from '../../assets/icons/person.svg'
 import EyeOff from '../../assets/icons/eye-off.svg'
 import Eye from '../../assets/icons/eye.svg'
 import QuestionMark from '../../assets/icons/questionMark.svg'
+import Edit from '../../assets/icons/edit.svg'
+import Save from '../../assets/icons/save.svg'
 import Camera from '../../assets/icons/camera.svg'
+import Pencil from '../../assets/icons/pencil.svg'
 import None from '../../assets/icons/none.svg'
 
 export default function Icons({ name, filled, color, ...props }) {
@@ -36,6 +39,15 @@ export default function Icons({ name, filled, color, ...props }) {
 
     case 'camera':
       return <Camera style={{ color: color }} {...props} />
+
+    case 'edit':
+      return <Edit style={{ color: color }} {...props} />
+
+    case 'save':
+      return <Save style={{ color: color }} {...props} />
+
+    case 'pencil':
+      return <Pencil style={{ color: color }} {...props} />
 
     case 'none':
       return <None />

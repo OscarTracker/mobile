@@ -9,8 +9,8 @@ import {
 } from 'firebase/auth'
 
 import { getFirestore, collection, getDocs } from 'firebase/firestore'
-import { doc, setDoc } from 'firebase/firestore'
-import { getStorage, ref, uploadBytes } from 'firebase/storage'
+import { doc, setDoc, getDoc } from 'firebase/firestore'
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 
 // Your web app's Firebase configuration
@@ -40,7 +40,7 @@ const useAuth = () => {
   return currentUser
 }
 
-const uploadImage = async (url, uid) => {
+const setAvatar = async (uid, url) => {
   const storageRef = ref(storage, `avatars/${uid}.png`)
 
   fetch(url)
@@ -52,11 +52,18 @@ const signUp = async (email, password, name, nickname, image) => {
   await createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user
-      if (image) uploadImage(image, user.uid)
+      if (image) setAvatar(user.uid, image)
       const docData = {
+        uid: user.uid,
         email: user.email,
         name: name,
         nickname: nickname,
+        preferences: {
+          showPoster: false,
+          showPlot: false,
+          showCast: false,
+          showRatings: false,
+        },
       }
       setDoc(doc(db, 'users', user.uid), docData).catch((error) => {
         console.log(error)
@@ -66,25 +73,67 @@ const signUp = async (email, password, name, nickname, image) => {
       console.log(error.code)
       console.log(error.message)
     })
+
+  if (user !== null) return getUserInformation(user.uid)
 }
 
 const signIn = async (email, password) => {
+  let user = null
   await signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      const user = userCredential.user
+      user = userCredential.user
     })
     .catch((error) => {
-      const errorCode = error.code
-      const errorMessage = error.message
-      console.log(errorCode)
-      console.log(errorMessage)
+      console.log(error.code)
+      console.log(error.message)
     })
+
+  if (user !== null) return getUserInformation(user.uid)
+}
+
+const getUserInformation = async (uid) => {
+  const docRef = doc(db, 'users', uid)
+  const docSnap = await getDoc(docRef)
+  if (docSnap.exists()) {
+    return docSnap.data()
+  } else {
+    console.log('No such document!')
+  }
 }
 
 const signOut = async () => {
   await logOut(auth)
     .then(() => {})
     .catch((error) => {})
+}
+
+const setProfile = async (uid, name, nickname, email, preferences) => {
+  const docData = {
+    email: email,
+    name: name,
+    nickname: nickname,
+    preferences: preferences,
+    uid: uid,
+  }
+  await setDoc(doc(db, 'users', uid), docData).catch((error) => {
+    console.log(error.code)
+    console.log(error.message)
+  })
+}
+
+const getAvatar = async (uid) => {
+  const pathReference = await ref(storage, `avatars/${uid}.png`)
+  let image = undefined
+  await getDownloadURL(pathReference)
+    .then((url) => {
+      image = url
+    })
+    .catch((error) => {
+      console.log(error.code)
+      console.log(error.message)
+    })
+
+  return image
 }
 
 const getMovies = async () => {
@@ -101,4 +150,13 @@ const getMovies = async () => {
   return data
 }
 
-export { signUp, signIn, signOut, useAuth, getMovies }
+export {
+  signUp,
+  signIn,
+  signOut,
+  useAuth,
+  getMovies,
+  setProfile,
+  getAvatar,
+  setAvatar,
+}

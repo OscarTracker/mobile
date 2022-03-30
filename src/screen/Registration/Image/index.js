@@ -1,16 +1,9 @@
 import React, { useState } from 'react'
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  View,
-  Image,
-  TouchableOpacity,
-} from 'react-native'
+import { StyleSheet, Text, SafeAreaView, View } from 'react-native'
 import theme from '../../../assets/theme'
-import * as ImagePicker from 'expo-image-picker'
 
-import Icons from '../../../components/Icons'
+import ImagePicker from '../../../components/ImagePicker'
+
 import Button from '../../../components/Button'
 
 import { signUp } from '../../../../firebase'
@@ -29,18 +22,6 @@ export default function RegistrationImage({ route, navigation }) {
     navigation.navigate('Home')
   }
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      quality: 1,
-    })
-
-    if (!result.cancelled) {
-      setImage(result.uri)
-    }
-  }
-
   return (
     <SafeAreaView style={styles.container} behavior='padding'>
       <View style={styles.header}>
@@ -50,18 +31,7 @@ export default function RegistrationImage({ route, navigation }) {
         </Text>
       </View>
 
-      <TouchableOpacity onPress={pickImage} style={styles.image}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.image} />
-        ) : (
-          <Icons
-            width={34}
-            height={34}
-            name='camera'
-            color={theme.colors.primary}
-          />
-        )}
-      </TouchableOpacity>
+      <ImagePicker image={image} setImage={setImage} />
 
       <View>
         <Button
@@ -81,14 +51,6 @@ export default function RegistrationImage({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 174,
-    height: 174,
-    borderRadius: 500,
-    backgroundColor: theme.colors.spoiler,
-  },
   container: {
     flex: 1,
     margin: 20,

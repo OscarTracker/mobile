@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, TextInput, SafeAreaView, Image } from 'react-native'
+import { StyleSheet, View, SafeAreaView, Image } from 'react-native'
 
 import Button from '../../components/Button'
 import Input from '../../components/Input'
@@ -7,17 +7,21 @@ import logomark from '../../../assets/logomark.png'
 
 import { signIn, useAuth } from '../../../firebase'
 
+import { useUserContext } from '../../context/UserContext'
+
 export default function Login({ navigation }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const currentUser = useAuth()
+  const { user, setUser } = useUserContext()
 
   useEffect(() => {
-    if (currentUser) navigation.navigate('Home')
+    if (user) navigation.navigate('Home')
   })
 
-  const handleLogin = () => {
-    signIn(email, password)
+  const handleLogin = async () => {
+    const data = await signIn(email, password)
+    setUser(data)
+    navigation.navigate('Home')
   }
 
   const handleSignUp = async () => {

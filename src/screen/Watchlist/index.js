@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 20,
+    paddingHorizontal: 20,
   },
   title: {
     alignContent: 'center',

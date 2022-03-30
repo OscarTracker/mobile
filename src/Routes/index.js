@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react'
+import React, { useRef, useEffect, useState, useMemo } from 'react'
 import { View, Dimensions, Animated, LogBox, Keyboard } from 'react-native'
 import { setStatusBarStyle } from 'expo-status-bar'
 import { NavigationContainer } from '@react-navigation/native'
@@ -16,7 +16,12 @@ import RegistrationPassword from '../screen/Registration/Password'
 import RegistrationName from '../screen/Registration/Name'
 import RegistrationImage from '../screen/Registration/Image'
 
-LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core'])
+import UserProvider from '../context/UserContext'
+
+LogBox.ignoreLogs([
+  'AsyncStorage has been extracted from react-native core',
+  'Setting a timer',
+])
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -29,16 +34,18 @@ const getWidth = () => {
 
 export default function Routes() {
   return (
-    <NavigationContainer theme={theme} initial>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name='Authentication' component={Authentication} />
-        <Stack.Screen name='Home' component={Home} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer theme={theme}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name='Authentication' component={Authentication} />
+          <Stack.Screen name='Home' component={Home} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   )
 }
 
