@@ -12,7 +12,7 @@ import { useUserContext } from '../../context/UserContext'
 import Input from '../../components/Input'
 import IconButton from '../../components/IconButton'
 import ImagePicker from '../../components/ImagePicker'
-import SimpleToggle from '../../components/SimpleToggle'
+import Toggle from '../../components/Toggle'
 import Button from '../../components/Button'
 
 import { signOut, setProfile, getAvatar, setAvatar } from '../../../firebase'
@@ -133,7 +133,7 @@ export default function Account({ navigation }) {
 
           <View style={styles.toggle}>
             <Text style={styles.toggleTitle}>Show posters</Text>
-            <SimpleToggle
+            <Toggle
               disabled={!editing}
               active={showPoster}
               setActive={setShowPoster}
@@ -142,7 +142,7 @@ export default function Account({ navigation }) {
 
           <View style={styles.toggle}>
             <Text style={styles.toggleTitle}>Show plot</Text>
-            <SimpleToggle
+            <Toggle
               disabled={!editing}
               active={showPlot}
               setActive={setShowPlot}
@@ -151,7 +151,7 @@ export default function Account({ navigation }) {
 
           <View style={styles.toggle}>
             <Text style={styles.toggleTitle}>Show cast</Text>
-            <SimpleToggle
+            <Toggle
               disabled={!editing}
               active={showCast}
               setActive={setShowCast}
@@ -160,7 +160,7 @@ export default function Account({ navigation }) {
 
           <View style={styles.toggle}>
             <Text style={styles.toggleTitle}>Show ratings</Text>
-            <SimpleToggle
+            <Toggle
               disabled={!editing}
               active={showRatings}
               setActive={setShowRatings}

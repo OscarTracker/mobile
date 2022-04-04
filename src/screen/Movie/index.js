@@ -3,10 +3,22 @@ import {
   StyleSheet,
   View,
   ScrollView,
+  Text,
   Animated,
+  Image,
+  Pressable,
+  TouchableOpacity,
 } from 'react-native'
 import { useState, useEffect } from 'react'
 import theme from '../../assets/theme'
+
+import Icons from '../../components/Icons'
+import TagCaroussel from '../../components/TagCaroussel'
+import ActorCaroussel from '../../components/ActorCaroussel'
+import SubHeader from '../../components/SubHeader'
+import SubText from '../../components/SubText'
+import ActorCard from '../../components/ActorCard'
+import ServiceIcon from '../../components/ServiceIcon'
 
 export default function Movie() {
   const [name, setName] = useState('The Power of the Dog')
@@ -23,13 +35,24 @@ export default function Movie() {
     'https://www.youtube.com/watch?v=LRDPo0CHrko'
   )
   const [nominations, setNominations] = useState([
-    'Best Live Action Short Film',
-    'Best Documentary Feature',
-    'Best Costume Design',
-    'Best Actress in a Supporting Role',
-    'Best Makeup and Hairstyling',
-    'Best Sound',
-    'Best Original Song',
+    {
+      name: 'Best Live Action Short Film',
+    },
+    {
+      name: 'Best Documentary Feature',
+    },
+    {
+      name: 'Best Actress in a Supporting Role',
+    },
+    {
+      name: 'Best Makeup and Hairstyling',
+    },
+    {
+      name: 'Best Costume Design',
+    },
+    {
+      name: 'Best Sound',
+    },
   ])
   const [watchedBy, setWatchedBy] = useState([
     {
@@ -78,32 +101,113 @@ export default function Movie() {
   useEffect(() => {
     const fetchData = async () => {}
     fetchData()
-  }, [setData])
+  }, [])
 
-  return <SafeAreaView style={styles.container}></SafeAreaView>
+  const markWatched = () => {
+    setWatched(!watched)
+  }
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollableContainer}>
+        <Image
+          style={styles.image}
+          source={{
+            uri: poster,
+          }}
+        />
+        <Text style={styles.title}>{name}</Text>
+        <View style={styles.ratingContainer}>
+          <TouchableOpacity style={styles.ratingItem}>
+            <ServiceIcon name='imdb' width={36} height={36} />
+            <Text style={styles.rating}>{imdbRating}/10</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.ratingItem}>
+            <ServiceIcon name='rotten' width={36} height={36} />
+            <Text style={styles.rating}>{rottenRating}%</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.ratingItem}>
+            <Icons name='movie' width={36} height={36} />
+            <Text style={styles.rating}>Trailer</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.watched} onPress={() => markWatched()}>
+          <Text style={styles.watchedTitle}>
+            {watched ? 'Mark as Watched' : 'Mark as Unwatched'}
+          </Text>
+        </TouchableOpacity>
+
+        <SubHeader title={'Nominations'} />
+        <TagCaroussel content={nominations} />
+
+        <SubHeader title={'Watched by'} />
+        <TagCaroussel content={watchedBy} withImages />
+
+        <SubHeader title={'Plot'} />
+        <SubText content={plot} />
+
+        <SubHeader title={'Cast'} />
+
+        <ActorCaroussel content={cast} />
+      </ScrollView>
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
-  scroll: {
-    paddingHorizontal: 20,
-  },
-
   container: {
     flex: 1,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
   },
-  content: {
-    padding: 20,
+  scrollableContainer: {
+    width: '100%',
+  },
+  image: {
+    alignSelf: 'center',
+    width: 289,
+    height: 428,
+    borderRadius: 20,
   },
   title: {
-    alignContent: 'center',
     textAlign: 'center',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    fontSize: 30,
-    fontWeight: '400',
+    fontSize: 24,
     color: 'white',
-    paddingVertical: 20,
+    paddingVertical: 24,
+  },
+  ratingContainer: {
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
+  ratingItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: theme.colors.spoiler,
+    width: 68,
+    height: 84,
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  rating: {
+    color: theme.colors.text,
+    fontSize: 14,
+  },
+  watched: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    backgroundColor: theme.colors.spoiler,
+    width: 197,
+    height: 42,
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  watchedTitle: {
+    color: theme.colors.text,
+    fontSize: 18,
   },
 })

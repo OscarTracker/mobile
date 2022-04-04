@@ -10,6 +10,7 @@ import Icons from '../components/Icons'
 import Account from '../screen/Account'
 import Feed from '../screen/Feed'
 import Watchlist from '../screen/Watchlist'
+import Movie from '../screen/Movie'
 import Login from '../screen/Login'
 import RegistrationEmail from '../screen/Registration/Email'
 import RegistrationPassword from '../screen/Registration/Password'
@@ -42,8 +43,8 @@ export default function Routes() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name='Authentication' component={Authentication} />
           <Stack.Screen name='Home' component={Home} />
+          <Stack.Screen name='Authentication' component={Authentication} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>
@@ -90,7 +91,7 @@ const Home = () => {
   return (
     <View style={{ flex: 1 }}>
       <Tab.Navigator
-        initialRouteName='Check'
+        initialRouteName='WatchlistTab'
         screenOptions={{
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.inactive,
@@ -108,8 +109,8 @@ const Home = () => {
         }}
       >
         <Tab.Screen
-          name='Feed'
-          component={Feed}
+          name='FeedTab'
+          component={FeedTab}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
@@ -139,8 +140,8 @@ const Home = () => {
           })}
         />
         <Tab.Screen
-          name='Check'
-          component={Watchlist}
+          name='WatchlistTab'
+          component={WatchlistTab}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
@@ -170,8 +171,8 @@ const Home = () => {
           })}
         />
         <Tab.Screen
-          name='Account'
-          component={Account}
+          name='AccountTab'
+          component={AccountTab}
           options={{
             headerShown: false,
             tabBarIcon: ({ focused }) => (
@@ -216,5 +217,42 @@ const Home = () => {
         />
       )}
     </View>
+  )
+}
+
+const FeedTab = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name='Feed' component={Feed} />
+    </Stack.Navigator>
+  )
+}
+
+const WatchlistTab = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name='Watchlist' component={Watchlist} />
+      <Stack.Screen name='Movie' component={Movie} />
+    </Stack.Navigator>
+  )
+}
+
+const AccountTab = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name='Account' component={Account} />
+    </Stack.Navigator>
   )
 }
