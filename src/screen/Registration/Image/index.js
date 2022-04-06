@@ -6,7 +6,7 @@ import ImagePicker from '../../../components/ImagePicker'
 
 import Button from '../../../components/Button'
 
-import { signUp } from '../../../../firebase'
+import { signUp } from '../../../apis/firebase'
 
 export default function RegistrationImage({ route, navigation }) {
   const [image, setImage] = useState(null)

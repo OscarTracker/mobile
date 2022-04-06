@@ -5,7 +5,7 @@ import Button from '../../components/Button'
 import Input from '../../components/Input'
 import logomark from '../../../assets/logomark.png'
 
-import { signIn, useAuth } from '../../../firebase'
+import { signIn, useAuth } from '../../apis/firebase'
 
 import { useUserContext } from '../../context/UserContext'
 

@@ -4,31 +4,37 @@ import {
   StyleSheet,
   Text,
   View,
+  Button,
   ScrollView,
   Animated,
 } from 'react-native'
 import Nominee from '../../components/Nominee'
 import Input from '../../components/Input'
 import { useState, useEffect } from 'react'
-import { getMovies } from '../../../firebase'
+import { getMovies } from '../../apis/firebase'
 import theme from '../../assets/theme'
 
-export default function Watchlist() {
+import { getMovie, getImageURL } from '../../apis/tmdb'
+
+export default function Watchlist({ navigation }) {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
 
-  useEffect(() => {
+  useEffect(async () => {
     const fetchData = async () => {
       const movies = await getMovies()
-      setData(movies)
-      setFilteredData(movies)
-      setLoading(false)
+      let newData = movies
+      newData.forEach(async (movie) => {
+        const dados = await getMovie(movie.imdbId)
+        movie.image = getImageURL() + dados.poster_path
+      })
+      setData(newData)
+      setFilteredData(newData)
     }
 
-    fetchData()
-  }, [setData, setFilteredData])
+    await fetchData()
+  }, [])
 
   const handleSearch = (text) => {
     setSearch(text)
@@ -50,6 +56,12 @@ export default function Watchlist() {
     setFilteredData(newFilteredData)
   }
 
+  const handleMovie = (movie) => {
+    navigation.navigate('Movie', {
+      movieInfo: movie,
+    })
+  }
+
   let AnimatedHeaderValue = new Animated.Value(0)
   const Header_Max_Heigth = 100
   const Header_Min_Heigth = 75
@@ -66,6 +78,20 @@ export default function Watchlist() {
     extrapolate: 'clamp',
   })
 
+  const renderItem = ({ item }) => {
+    return (
+      <Nominee
+        image={{ uri: item.image }}
+        key={item.imdbId}
+        title={item.name}
+        onPress={() => handleMovie(item)}
+        subtitle={`${item.nominations?.length} ${
+          item.nominations?.length === 1 ? 'nomination' : 'nominations'
+        }`}
+      />
+    )
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.header, { height: animateHeaderHeight }]}>
@@ -73,14 +99,7 @@ export default function Watchlist() {
           Watch List
         </Animated.Text>
       </Animated.View>
-
-      <ScrollView
-        scrollEventThrottle={1}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: AnimatedHeaderValue } } }],
-          { useNativeDriver: false }
-        )}
-      >
+      <View>
         <View style={styles.content}>
           <Input
             onChangeText={(text) => handleSearch(text)}
@@ -90,22 +109,23 @@ export default function Watchlist() {
             placeholder='Search Movie'
           />
           <View style={styles.itens}>
-            {filteredData.map((item) => {
-              return (
-                <Nominee
-                  key={item.imdbId}
-                  title={item.name}
-                  subtitle={`${item.nominations?.length} ${
-                    item.nominations?.length === 1
-                      ? 'nomination'
-                      : 'nominations'
-                  }`}
-                />
-              )
-            })}
+            <FlatList
+              scrollEventThrottle={1}
+              onScroll={Animated.event(
+                [
+                  {
+                    nativeEvent: { contentOffset: { y: AnimatedHeaderValue } },
+                  },
+                ],
+                { useNativeDriver: false }
+              )}
+              data={filteredData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.imdbId}
+            />
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }

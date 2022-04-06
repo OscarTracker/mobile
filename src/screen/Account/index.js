@@ -15,7 +15,7 @@ import ImagePicker from '../../components/ImagePicker'
 import Toggle from '../../components/Toggle'
 import Button from '../../components/Button'
 
-import { signOut, setProfile, getAvatar, setAvatar } from '../../../firebase'
+import { signOut, setProfile, getAvatar, setAvatar } from '../../apis/firebase'
 import theme from '../../assets/theme'
 
 export default function Account({ navigation }) {
