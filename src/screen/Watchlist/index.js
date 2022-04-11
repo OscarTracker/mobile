@@ -14,7 +14,7 @@ import { useState, useEffect } from 'react'
 import { getMovies } from '../../apis/firebase'
 import theme from '../../assets/theme'
 
-import { getMovie, getImageURL } from '../../apis/tmdb'
+import { getMovie, getImage } from '../../apis/tmdb'
 
 export default function Watchlist({ navigation }) {
   const [data, setData] = useState([])
@@ -27,12 +27,12 @@ export default function Watchlist({ navigation }) {
       let newData = movies
       newData.forEach(async (movie) => {
         const dados = await getMovie(movie.imdbId)
-        movie.image = getImageURL() + dados.poster_path
+        movie.extraData = dados
+        movie.name = dados.title
       })
       setData(newData)
       setFilteredData(newData)
     }
-
     await fetchData()
   }, [])
 
@@ -81,7 +81,7 @@ export default function Watchlist({ navigation }) {
   const renderItem = ({ item }) => {
     return (
       <Nominee
-        image={{ uri: item.image }}
+        image={{ uri: getImage(item.extraData?.poster_path) }}
         key={item.imdbId}
         title={item.name}
         onPress={() => handleMovie(item)}
@@ -99,31 +99,30 @@ export default function Watchlist({ navigation }) {
           Watch List
         </Animated.Text>
       </Animated.View>
-      <View>
-        <View style={styles.content}>
-          <Input
-            onChangeText={(text) => handleSearch(text)}
-            value={search}
-            leftIcon={'search'}
-            rightIcon={'search'}
-            placeholder='Search Movie'
+      <View style={styles.content}>
+        <Input
+          style={styles.input}
+          onChangeText={(text) => handleSearch(text)}
+          value={search}
+          leftIcon={'search'}
+          rightIcon={'search'}
+          placeholder='Search Movie'
+        />
+        <View style={styles.itens}>
+          <FlatList
+            style={styles.list}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: { contentOffset: { y: AnimatedHeaderValue } },
+                },
+              ],
+              { useNativeDriver: false }
+            )}
+            data={filteredData}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.imdbId}
           />
-          <View style={styles.itens}>
-            <FlatList
-              scrollEventThrottle={1}
-              onScroll={Animated.event(
-                [
-                  {
-                    nativeEvent: { contentOffset: { y: AnimatedHeaderValue } },
-                  },
-                ],
-                { useNativeDriver: false }
-              )}
-              data={filteredData}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.imdbId}
-            />
-          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -131,6 +130,9 @@ export default function Watchlist({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   scroll: {
     paddingHorizontal: 20,
   },
@@ -139,13 +141,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   itens: {
+    flex: 1,
     paddingTop: 20,
   },
-  container: {
-    flex: 1,
+  list: {
+    paddingHorizontal: 20,
   },
   content: {
-    paddingHorizontal: 20,
+    flex: 1,
+  },
+  input: {
+    marginHorizontal: 20,
   },
   title: {
     alignContent: 'center',

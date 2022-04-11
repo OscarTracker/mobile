@@ -1,39 +1,35 @@
 import { tmdbConfig } from '../../permissions'
+import axios from 'axios'
 
-const BASE_URL = tmdbConfig.api_base_url
-const API_KEY = tmdbConfig.api_key
-const IMG_URL = tmdbConfig.image_base_url
+const api_base_url = tmdbConfig.api_base_url
+const api_key = tmdbConfig.api_key
+const image_base_url = tmdbConfig.image_base_url
 
-const getImageURL = () => {
-  return IMG_URL
+const api = axios.create({ baseURL: api_base_url })
+
+const getImage = (id) => {
+  return image_base_url + id
 }
 
 const getMovie = async (id) => {
-  let data = null
-  try {
-    const response = await fetch(
-      `${BASE_URL}movie/${id}?api_key=${API_KEY}&language=en-US`
-    )
-    const responseData = await response.json()
-    data = responseData
-  } catch (error) {
-    console.log(error)
-  }
-  return data
+  const response = await api.get(`movie/${id}`, {
+    params: { api_key, language: 'en-US' },
+  })
+  return response.data
 }
 
-const getMovieImages = async (id) => {
-  let data = null
-  try {
-    const response = await fetch(
-      `${BASE_URL}movie/${id}/images?api_key=${API_KEY}&language=en`
-    )
-    const responseData = await response.json()
-    data = responseData
-  } catch (error) {
-    console.log(error)
-  }
-  return data
+const getCast = async (id) => {
+  const response = await api.get(`movie/${id}/credits`, {
+    params: { api_key, language: 'en-US' },
+  })
+  return response.data
 }
 
-export { getMovie, getMovieImages, getImageURL }
+const getVideos = async (id) => {
+  const response = await api.get(`movie/${id}/videos`, {
+    params: { api_key, language: 'en-US' },
+  })
+  return response.data
+}
+
+export { getMovie, getImage, getCast, getVideos }

@@ -3,7 +3,7 @@ import theme from '../../assets/theme'
 
 export default function ActorCard({ name, character, image, index }) {
   return (
-    <View style={[styles.container, index == 0 && { marginLeft: 0 }]}>
+    <View style={[styles.container, index == 0 && { marginLeft: 20 }]}>
       <Image style={styles.image} source={image} />
       <View style={styles.texts}>
         <Text style={styles.name}>{name}</Text>
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.spoiler,
     borderRadius: 10,
     width: 140,
-    marginLeft: 20,
+    marginRight: 20,
   },
   image: {
     borderTopLeftRadius: 10,

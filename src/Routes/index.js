@@ -43,8 +43,8 @@ export default function Routes() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name='Home' component={Home} />
           <Stack.Screen name='Authentication' component={Authentication} />
+          <Stack.Screen name='Home' component={Home} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserProvider>

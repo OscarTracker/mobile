@@ -12,7 +12,7 @@ import { useUserContext } from '../../context/UserContext'
 import Input from '../../components/Input'
 import IconButton from '../../components/IconButton'
 import ImagePicker from '../../components/ImagePicker'
-import Toggle from '../../components/Toggle'
+import SimpleToggle from '../../components/SimpleToggle'
 import Button from '../../components/Button'
 
 import { signOut, setProfile, getAvatar, setAvatar } from '../../apis/firebase'
@@ -131,36 +131,36 @@ export default function Account({ navigation }) {
 
           <Text style={styles.sectionTitle}>Preferences</Text>
 
-          <View style={styles.toggle}>
-            <Text style={styles.toggleTitle}>Show posters</Text>
-            <Toggle
+          <View style={styles.simpleToggle}>
+            <Text style={styles.simpleToggleTitle}>Show posters</Text>
+            <SimpleToggle
               disabled={!editing}
               active={showPoster}
               setActive={setShowPoster}
             />
           </View>
 
-          <View style={styles.toggle}>
-            <Text style={styles.toggleTitle}>Show plot</Text>
-            <Toggle
+          <View style={styles.simpleToggle}>
+            <Text style={styles.simpleToggleTitle}>Show plot</Text>
+            <SimpleToggle
               disabled={!editing}
               active={showPlot}
               setActive={setShowPlot}
             />
           </View>
 
-          <View style={styles.toggle}>
-            <Text style={styles.toggleTitle}>Show cast</Text>
-            <Toggle
+          <View style={styles.simpleToggle}>
+            <Text style={styles.simpleToggleTitle}>Show cast</Text>
+            <SimpleToggle
               disabled={!editing}
               active={showCast}
               setActive={setShowCast}
             />
           </View>
 
-          <View style={styles.toggle}>
-            <Text style={styles.toggleTitle}>Show ratings</Text>
-            <Toggle
+          <View style={styles.simpleToggle}>
+            <Text style={styles.simpleToggleTitle}>Show ratings</Text>
+            <SimpleToggle
               disabled={!editing}
               active={showRatings}
               setActive={setShowRatings}
@@ -230,11 +230,11 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     color: theme.colors.text,
   },
-  toggleTitle: {
+  simpleToggleTitle: {
     fontSize: 18,
     color: theme.colors.text,
   },
-  toggle: {
+  simpleToggle: {
     alignItems: 'center',
     paddingTop: 20,
     justifyContent: 'space-between',

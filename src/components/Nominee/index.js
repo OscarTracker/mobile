@@ -18,8 +18,8 @@ export default function Nominee({
       return (
         <ImageBackground
           source={image}
-          style={{ width: '100%', height: '100%' }}
-          imageStyle={{ borderRadius: 12 }}
+          style={styles.image}
+          imageStyle={styles.imageBorder}
         >
           {checked && (
             <View style={styles.checked}>
@@ -30,14 +30,7 @@ export default function Nominee({
       )
     } else {
       return (
-        <ImageBackground
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: theme.colors.spoiler,
-            borderRadius: 12,
-          }}
-        >
+        <ImageBackground style={styles.image}>
           {checked && (
             <View style={styles.checked}>
               <Icon name='check-circle' color='white' />
@@ -80,6 +73,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
   },
+  imageBorder: {
+    borderRadius: 12,
+  },
   checked: {
     position: 'absolute',
     top: 0,
@@ -102,6 +98,8 @@ const styles = StyleSheet.create({
   },
   image: {
     maxHeight: 158,
+    backgroundColor: theme.colors.spoiler,
+    borderRadius: 10,
     maxWidth: 109,
     width: '100%',
     height: '100%',

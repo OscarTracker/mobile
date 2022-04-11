@@ -4,108 +4,78 @@ import {
   View,
   ScrollView,
   Text,
-  Animated,
   Image,
-  Pressable,
   TouchableOpacity,
+  Linking,
 } from 'react-native'
 import { useState, useEffect } from 'react'
 import theme from '../../assets/theme'
+import { cattegories } from '../../assets/data'
 
 import Icons from '../../components/Icons'
 import TagCaroussel from '../../components/TagCaroussel'
 import ActorCaroussel from '../../components/ActorCaroussel'
 import SubHeader from '../../components/SubHeader'
 import SubText from '../../components/SubText'
-import ActorCard from '../../components/ActorCard'
 import ServiceIcon from '../../components/ServiceIcon'
+import { getCast, getImage, getVideos } from '../../apis/tmdb'
 
-export default function Movie() {
-  const [name, setName] = useState('The Power of the Dog')
+export default function Movie({ navigation, route }) {
+  const [name, setName] = useState('')
+  const [plot, setPlot] = useState()
+  const [poster, setPoster] = useState(null)
+  const [nominations, setNominations] = useState([])
+  const [trailer, setTrailer] = useState('https://www.youtube.com/watch?v=')
+  const [cast, setCast] = useState([])
   const [imdbRating, setImdbRating] = useState(3)
-  const [rottenRating, setRottenRating] = useState(93)
-  const [watched, setWatched] = useState(false)
-  const [poster, setPoster] = useState(
-    'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/pTieUAFyDbC22uq0p7uMT1wBYax.jpg'
-  )
-  const [plot, setPlot] = useState(
-    'A domineering but charismatic rancher wages a war of intimidation on his click to seebrothers new wife and her teen son, until long-hidden secrets come to light.'
-  )
-  const [trailer, setTrailer] = useState(
-    'https://www.youtube.com/watch?v=LRDPo0CHrko'
-  )
-  const [nominations, setNominations] = useState([
-    {
-      name: 'Best Live Action Short Film',
-    },
-    {
-      name: 'Best Documentary Feature',
-    },
-    {
-      name: 'Best Actress in a Supporting Role',
-    },
-    {
-      name: 'Best Makeup and Hairstyling',
-    },
-    {
-      name: 'Best Costume Design',
-    },
-    {
-      name: 'Best Sound',
-    },
-  ])
-  const [watchedBy, setWatchedBy] = useState([
-    {
-      name: 'Miguel',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fBEucxECxGLKVHBznO0qHtCGiMO.jpg',
-    },
-    {
-      name: 'Sophia',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fBEucxECxGLKVHBznO0qHtCGiMO.jpg',
-    },
-    {
-      name: 'Leo',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fBEucxECxGLKVHBznO0qHtCGiMO.jpg',
-    },
-  ])
-  const [cast, setCast] = useState([
-    {
-      name: 'Benedict Cumberbatch',
-      character: 'Phil Burbank',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fBEucxECxGLKVHBznO0qHtCGiMO.jpg',
-    },
-    {
-      name: 'Kirsten Dunst',
-      character: 'Rose Gordon-Burbank',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5dI5s8Oq2Ook5PFzTWMW6DCXVjm.jpg',
-    },
-    {
-      name: 'Jesse Plemons',
-      character: 'George Burbank',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ckTthGclQE0y6b7gR0RpRo7LskL.jpg',
-    },
-    {
-      name: 'Kodi Smit-McPhee',
-      character: 'Peter Gordon',
-      image:
-        'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/sesCWba9NwPDYDZzbVLs7OgLOti.jpg',
-    },
-  ])
+  const [imdbLink, setImdbLink] = useState('https://www.imdb.com/title/')
+
+  const [watched, setWatched] = useState()
+  const [watchedBy, setWatchedBy] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {}
+    const setDetails = () => {
+      const data = route.params.movieInfo
+      setName(data.extraData.title)
+      setPlot(data.extraData.overview)
+      setPoster(data.extraData.poster_path)
+
+      setImdbRating(data.extraData.vote_average)
+      setImdbLink(`https://www.imdb.com/title/${data.extraData.imdb_id}`)
+
+      let nominations = []
+      data.nominations.forEach((element) => {
+        nominations.push({
+          id: element,
+          name: cattegories[element],
+        })
+      })
+      setNominations(nominations)
+    }
+
+    const fetchData = async () => {
+      const response = await getCast(route.params.movieInfo?.imdbId)
+      setCast(response.cast)
+    }
+
+    const fetchTrailer = async () => {
+      const response = await getVideos(route.params.movieInfo?.imdbId)
+      const videos = response.results
+      videos.forEach((element) => {
+        if (element.type === 'Trailer' && element.site === 'YouTube') {
+          setTrailer(`https://www.youtube.com/watch?v=${element.key}`)
+          return
+        }
+      })
+      if (!trailer) setTrailer(null)
+    }
+
+    setDetails()
     fetchData()
+    fetchTrailer()
   }, [])
 
-  const markWatched = () => {
-    setWatched(!watched)
-  }
+  const markWatched = async () => {}
 
   return (
     <SafeAreaView style={styles.container}>
@@ -113,36 +83,65 @@ export default function Movie() {
         <Image
           style={styles.image}
           source={{
-            uri: poster,
+            uri: getImage(poster),
           }}
         />
         <Text style={styles.title}>{name}</Text>
         <View style={styles.ratingContainer}>
-          <TouchableOpacity style={styles.ratingItem}>
+          <TouchableOpacity
+            style={styles.ratingItem}
+            onPress={() => Linking.openURL(imdbLink)}
+          >
             <ServiceIcon name='imdb' width={36} height={36} />
             <Text style={styles.rating}>{imdbRating}/10</Text>
           </TouchableOpacity>
+
+          {/* TODO 
+
+          implement rottenTomatoes api call to get ratings, waiting for Rotten Tomatoes® Developer Network approval
+        
+
           <TouchableOpacity style={styles.ratingItem}>
             <ServiceIcon name='rotten' width={36} height={36} />
             <Text style={styles.rating}>{rottenRating}%</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.ratingItem}>
-            <Icons name='movie' width={36} height={36} />
-            <Text style={styles.rating}>Trailer</Text>
-          </TouchableOpacity>
+
+            */}
+
+          {trailer && (
+            <TouchableOpacity
+              style={styles.ratingItem}
+              onPress={() => Linking.openURL(trailer)}
+            >
+              <Icons name='movie' width={36} height={36} />
+              <Text style={styles.rating}>Trailer</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
+        {/* TODO 
+
+        implement watched button after groups and users are correctly implemented
+        
         <TouchableOpacity style={styles.watched} onPress={() => markWatched()}>
           <Text style={styles.watchedTitle}>
             {watched ? 'Mark as Watched' : 'Mark as Unwatched'}
           </Text>
         </TouchableOpacity>
 
+        */}
+
         <SubHeader title={'Nominations'} />
         <TagCaroussel content={nominations} />
 
+        {/* TODO 
+
+        implement watchedBy after groups have been implemented
+        
         <SubHeader title={'Watched by'} />
         <TagCaroussel content={watchedBy} withImages />
+
+        */}
 
         <SubHeader title={'Plot'} />
         <SubText content={plot} />
