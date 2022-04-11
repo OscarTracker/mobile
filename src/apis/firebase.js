@@ -15,15 +15,7 @@ import { useEffect, useState } from 'react'
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: 'AIzaSyA3BYv-ljg2HK5WdGZFCW4FtGi9KUp9XME',
-  authDomain: 'oscartracker-7dd42.firebaseapp.com',
-  projectId: 'oscartracker-7dd42',
-  storageBucket: 'oscartracker-7dd42.appspot.com',
-  messagingSenderId: '150641555016',
-  appId: '1:150641555016:web:31ae805d19717a13348a7d',
-  measurementId: 'G-KQ93N86KHJ',
-}
+import { firebaseConfig } from '../../permissions'
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig)

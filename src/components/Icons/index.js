@@ -11,6 +11,7 @@ import QuestionMark from '../../assets/icons/questionMark.svg'
 import Edit from '../../assets/icons/edit.svg'
 import Save from '../../assets/icons/save.svg'
 import Camera from '../../assets/icons/camera.svg'
+import Movie from '../../assets/icons/movie.svg'
 import Pencil from '../../assets/icons/pencil.svg'
 import None from '../../assets/icons/none.svg'
 
@@ -48,6 +49,9 @@ export default function Icons({ name, filled, color, ...props }) {
 
     case 'pencil':
       return <Pencil style={{ color: color }} {...props} />
+
+    case 'movie':
+      return <Movie style={{ color: color }} {...props} />
 
     case 'none':
       return <None />
