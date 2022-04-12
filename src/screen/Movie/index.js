@@ -19,6 +19,8 @@ import SubHeader from '../../components/SubHeader'
 import SubText from '../../components/SubText'
 import ServiceIcon from '../../components/ServiceIcon'
 import { getCast, getImage, getVideos } from '../../apis/tmdb'
+import { setMovieUnwatched, setMovieWatched } from '../../apis/firebase'
+import { useUserContext } from '../../context/UserContext'
 
 export default function Movie({ navigation, route }) {
   const [name, setName] = useState('')
@@ -30,8 +32,10 @@ export default function Movie({ navigation, route }) {
   const [imdbRating, setImdbRating] = useState(3)
   const [imdbLink, setImdbLink] = useState('https://www.imdb.com/title/')
 
-  const [watched, setWatched] = useState()
+  const [watched, setWatched] = useState(false)
   const [watchedBy, setWatchedBy] = useState([])
+
+  const { user, setUser } = useUserContext()
 
   useEffect(() => {
     const setDetails = () => {
@@ -42,6 +46,9 @@ export default function Movie({ navigation, route }) {
 
       setImdbRating(data.extraData.vote_average)
       setImdbLink(`https://www.imdb.com/title/${data.extraData.imdb_id}`)
+
+      let moviesWatched = user.watchedMovies || []
+      if (moviesWatched?.includes(data.imdbId)) setWatched(true)
 
       let nominations = []
       data.nominations.forEach((element) => {
@@ -75,7 +82,24 @@ export default function Movie({ navigation, route }) {
     fetchTrailer()
   }, [])
 
-  const markWatched = async () => {}
+  const markWatched = async () => {
+    const movieId = route.params.movieInfo?.imdbId
+    let moviesWatched = user.watchedMovies || []
+    let newUser = user
+
+    if (!watched) {
+      await setMovieWatched(user.uid, movieId)
+      moviesWatched.push(movieId)
+      newUser.watchedMovies = moviesWatched
+      setUser(newUser)
+    } else {
+      await setMovieUnwatched(user.uid, movieId)
+      let newMoviesWatched = moviesWatched.filter((item) => item != movieId)
+      newUser.watchedMovies = newMoviesWatched
+      setUser(newUser)
+    }
+    setWatched(!watched)
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -119,17 +143,11 @@ export default function Movie({ navigation, route }) {
           )}
         </View>
 
-        {/* TODO 
-
-        implement watched button after groups and users are correctly implemented
-        
         <TouchableOpacity style={styles.watched} onPress={() => markWatched()}>
           <Text style={styles.watchedTitle}>
-            {watched ? 'Mark as Watched' : 'Mark as Unwatched'}
+            {watched ? 'Mark as Unwatched' : 'Mark as Watched'}
           </Text>
         </TouchableOpacity>
-
-        */}
 
         <SubHeader title={'Nominations'} />
         <TagCaroussel content={nominations} />

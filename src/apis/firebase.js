@@ -8,8 +8,17 @@ import {
   onAuthStateChanged,
 } from 'firebase/auth'
 
-import { getFirestore, collection, getDocs } from 'firebase/firestore'
-import { doc, setDoc, getDoc } from 'firebase/firestore'
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  doc,
+  setDoc,
+  getDoc,
+} from 'firebase/firestore'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 
@@ -142,13 +151,29 @@ const getMovies = async () => {
   return data
 }
 
+const setMovieWatched = async (userId, movieId) => {
+  const usersRef = doc(db, 'users', userId)
+  await updateDoc(usersRef, {
+    watchedMovies: arrayUnion(movieId),
+  })
+}
+
+const setMovieUnwatched = async (userId, movieId) => {
+  const usersRef = doc(db, 'users', userId)
+  await updateDoc(usersRef, {
+    watchedMovies: arrayRemove(movieId),
+  })
+}
+
 export {
+  useAuth,
   signUp,
   signIn,
   signOut,
-  useAuth,
   getMovies,
   setProfile,
   getAvatar,
   setAvatar,
+  setMovieWatched,
+  setMovieUnwatched,
 }
