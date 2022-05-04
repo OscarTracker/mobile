@@ -58,6 +58,8 @@ export default function Movie({ navigation, route }) {
         })
       })
       setNominations(nominations)
+
+      setWatchedBy(route.params.watchersInfo)
     }
 
     const fetchData = async () => {
@@ -152,14 +154,8 @@ export default function Movie({ navigation, route }) {
         <SubHeader title={'Nominations'} />
         <TagCaroussel content={nominations} />
 
-        {/* TODO 
-
-        implement watchedBy after groups have been implemented
-        
         <SubHeader title={'Watched by'} />
         <TagCaroussel content={watchedBy} withImages />
-
-        */}
 
         <SubHeader title={'Plot'} />
         <SubText content={plot} />

@@ -2,17 +2,13 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
-  Text,
   View,
-  Button,
-  ScrollView,
   Animated,
 } from 'react-native'
 import Nominee from '../../components/Nominee'
 import Input from '../../components/Input'
 import { useState, useEffect } from 'react'
-import { getMovies } from '../../apis/firebase'
-import theme from '../../assets/theme'
+import { getMovies, getGroup } from '../../apis/firebase'
 
 import { getMovie, getImage } from '../../apis/tmdb'
 
@@ -20,6 +16,7 @@ export default function Watchlist({ navigation }) {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
   const [search, setSearch] = useState('')
+  const [group, setGroup] = useState(null)
 
   useEffect(async () => {
     const fetchData = async () => {
@@ -33,6 +30,13 @@ export default function Watchlist({ navigation }) {
       setData(newData)
       setFilteredData(newData)
     }
+
+    const fetchGroupsData = async () => {
+      const response = await getGroup('LP73MFa0s3RpeZwlsony')
+      setGroup(response)
+    }
+
+    await fetchGroupsData()
     await fetchData()
   }, [])
 
@@ -56,10 +60,19 @@ export default function Watchlist({ navigation }) {
     setFilteredData(newFilteredData)
   }
 
-  const handleMovie = (movie) => {
+  const handleMovie = (movie, watchers) => {
     navigation.navigate('Movie', {
       movieInfo: movie,
+      watchersInfo: watchers,
     })
+  }
+
+  const getWatchers = (movieId) => {
+    const watchers = []
+    group?.members.forEach((element) => {
+      if (element.watchedMovies.includes(movieId)) watchers.push(element)
+    })
+    return watchers
   }
 
   let AnimatedHeaderValue = new Animated.Value(0)
@@ -79,12 +92,14 @@ export default function Watchlist({ navigation }) {
   })
 
   const renderItem = ({ item }) => {
+    const watchers = getWatchers(item.imdbId)
     return (
       <Nominee
         image={{ uri: getImage(item.extraData?.poster_path) }}
         key={item.imdbId}
         title={item.name}
-        onPress={() => handleMovie(item)}
+        onPress={() => handleMovie(item, watchers)}
+        watchers={watchers}
         subtitle={`${item.nominations?.length} ${
           item.nominations?.length === 1 ? 'nomination' : 'nominations'
         }`}

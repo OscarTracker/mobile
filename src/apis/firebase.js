@@ -41,8 +41,8 @@ const useAuth = () => {
   return currentUser
 }
 
-const setAvatar = async (uid, url) => {
-  const storageRef = ref(storage, `avatars/${uid}.png`)
+const setAvatar = async (userId, url) => {
+  const storageRef = ref(storage, `avatars/${userId}.png`)
 
   fetch(url)
     .then((res) => res.blob())
@@ -75,7 +75,7 @@ const signUp = async (email, password, name, nickname, image) => {
       console.log(error.message)
     })
 
-  if (user !== null) return getUserInformation(user.uid)
+  if (user !== null) return getUser(user.uid)
 }
 
 const signIn = async (email, password) => {
@@ -89,11 +89,11 @@ const signIn = async (email, password) => {
       console.log(error.message)
     })
 
-  if (user !== null) return getUserInformation(user.uid)
+  if (user !== null) return getUser(user.uid)
 }
 
-const getUserInformation = async (uid) => {
-  const docRef = doc(db, 'users', uid)
+const getUser = async (userId) => {
+  const docRef = doc(db, 'users', userId)
   const docSnap = await getDoc(docRef)
   if (docSnap.exists()) {
     return docSnap.data()
@@ -108,13 +108,13 @@ const signOut = async () => {
     .catch((error) => {})
 }
 
-const setProfile = async (uid, name, nickname, email, preferences) => {
+const setProfile = async (userId, name, nickname, email, preferences) => {
   const docData = {
     email: email,
     name: name,
     nickname: nickname,
     preferences: preferences,
-    uid: uid,
+    uid: userId,
   }
   await setDoc(doc(db, 'users', uid), docData).catch((error) => {
     console.log(error.code)
@@ -122,8 +122,8 @@ const setProfile = async (uid, name, nickname, email, preferences) => {
   })
 }
 
-const getAvatar = async (uid) => {
-  const pathReference = await ref(storage, `avatars/${uid}.png`)
+const getAvatar = async (userId) => {
+  const pathReference = await ref(storage, `avatars/${userId}.png`)
   let image = undefined
   await getDownloadURL(pathReference)
     .then((url) => {
@@ -165,6 +165,24 @@ const setMovieUnwatched = async (userId, movieId) => {
   })
 }
 
+const getGroup = async (groupId) => {
+  const docRef = doc(db, 'groups', groupId)
+  const docSnap = await getDoc(docRef)
+  if (docSnap.exists()) {
+    const expanded = docSnap.data()
+    const members = []
+    expanded.members?.forEach(async (element) => {
+      const user = await getDoc(element)
+      const userData = user.data()
+      const avatar = await getAvatar(userData.uid)
+      members.push({ ...userData, avatar })
+    })
+    return { ...expanded, members }
+  } else {
+    console.log('No such document!')
+  }
+}
+
 export {
   useAuth,
   signUp,
@@ -176,4 +194,5 @@ export {
   setAvatar,
   setMovieWatched,
   setMovieUnwatched,
+  getGroup,
 }

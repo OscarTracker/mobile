@@ -52,13 +52,13 @@ export default function Nominee({
         </View>
         {watchers && (
           <View style={styles.watchers}>
-            {watchers.map((watcher, index) => (
+            {watchers.map((watcher) => (
               <Avatar
-                key={index}
+                key={watcher.uid}
                 containerStyle={styles.avatar}
                 size={40}
                 rounded
-                source={watcher}
+                source={{ uri: watcher.avatar }}
               />
             ))}
           </View>

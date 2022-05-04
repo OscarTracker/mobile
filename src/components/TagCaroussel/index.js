@@ -15,7 +15,7 @@ export default function TagCaroussel({ content, withImages }) {
           title={item.name}
           leftImage={
             withImages && {
-              uri: item.image,
+              uri: item.avatar,
             }
           }
         />
