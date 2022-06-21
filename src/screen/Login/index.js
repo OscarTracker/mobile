@@ -10,8 +10,8 @@ import { signIn, useAuth } from '../../apis/firebase'
 import { useUserContext } from '../../context/UserContext'
 
 export default function Login({ navigation }) {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('joaofleao@gmail.com')
+  const [password, setPassword] = useState('Nildo690.')
   const { user, setUser } = useUserContext()
 
   useEffect(() => {

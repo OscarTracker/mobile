@@ -1,11 +1,16 @@
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import theme from '../../assets/theme'
 
-export default function SubHeader({ title, onPress }) {
+export default function SubHeader({ title, onPress, small }) {
+  const getTextStyle = () => {
+    if (small) return [styles.smallTitle]
+    return [styles.title]
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={getTextStyle()}>{title}</Text>
         {onPress && (
           <TouchableOpacity style={styles.button} onPress={onPress}>
             <Text style={styles.seeMore}>see more</Text>
@@ -28,6 +33,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
+    color: theme.colors.text,
+  },
+  smallTitle: {
+    fontSize: 18,
     color: theme.colors.text,
   },
   seeMore: {

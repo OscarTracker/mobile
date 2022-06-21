@@ -1,7 +1,6 @@
 import { Avatar, Icon } from 'react-native-elements'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import Toggle from '../Toggle'
 import { ImageBackground } from 'react-native'
 import theme from '../../assets/theme'
 

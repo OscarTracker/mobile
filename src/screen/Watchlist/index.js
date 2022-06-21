@@ -1,21 +1,14 @@
-import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Animated,
-} from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet, View } from 'react-native'
 import Nominee from '../../components/Nominee'
-import Input from '../../components/Input'
+import SearchBar from '../../components/SearchBar'
+import Header from '../../components/Header'
 import { useState, useEffect } from 'react'
 import { getMovies, getGroup } from '../../apis/firebase'
-
 import { getMovie, getImage } from '../../apis/tmdb'
 
 export default function Watchlist({ navigation }) {
   const [data, setData] = useState([])
   const [filteredData, setFilteredData] = useState([])
-  const [search, setSearch] = useState('')
   const [group, setGroup] = useState(null)
 
   useEffect(async () => {
@@ -40,26 +33,6 @@ export default function Watchlist({ navigation }) {
     await fetchData()
   }, [])
 
-  const handleSearch = (text) => {
-    setSearch(text)
-    if (text === '') {
-      setFilteredData(data)
-      return
-    }
-    const formattedQuery = text
-      .toLowerCase()
-      .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
-
-    const newFilteredData = data.filter((nominee) => {
-      return nominee.name
-        .toLowerCase()
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '')
-        .includes(formattedQuery)
-    })
-
-    setFilteredData(newFilteredData)
-  }
-
   const handleMovie = (movie, watchers) => {
     navigation.navigate('Movie', {
       movieInfo: movie,
@@ -74,22 +47,6 @@ export default function Watchlist({ navigation }) {
     })
     return watchers
   }
-
-  let AnimatedHeaderValue = new Animated.Value(0)
-  const Header_Max_Heigth = 100
-  const Header_Min_Heigth = 75
-
-  const animateHeaderHeight = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Heigth - Header_Min_Heigth],
-    outputRange: [Header_Max_Heigth, Header_Min_Heigth],
-    extrapolate: 'clamp',
-  })
-
-  const animateFontSize = AnimatedHeaderValue.interpolate({
-    inputRange: [0, Header_Max_Heigth - Header_Min_Heigth],
-    outputRange: [30, 20],
-    extrapolate: 'clamp',
-  })
 
   const renderItem = ({ item }) => {
     const watchers = getWatchers(item.imdbId)
@@ -109,31 +66,12 @@ export default function Watchlist({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animated.View style={[styles.header, { height: animateHeaderHeight }]}>
-        <Animated.Text style={[styles.title, { fontSize: animateFontSize }]}>
-          Watch List
-        </Animated.Text>
-      </Animated.View>
+      <Header>Watch List</Header>
       <View style={styles.content}>
-        <Input
-          style={styles.input}
-          onChangeText={(text) => handleSearch(text)}
-          value={search}
-          leftIcon={'search'}
-          rightIcon={'search'}
-          placeholder='Search Movie'
-        />
+        <SearchBar setData={setFilteredData} data={data} />
         <View style={styles.itens}>
           <FlatList
             style={styles.list}
-            onScroll={Animated.event(
-              [
-                {
-                  nativeEvent: { contentOffset: { y: AnimatedHeaderValue } },
-                },
-              ],
-              { useNativeDriver: false }
-            )}
             data={filteredData}
             renderItem={renderItem}
             keyExtractor={(item) => item.imdbId}

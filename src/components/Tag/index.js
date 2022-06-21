@@ -1,35 +1,11 @@
 import { StyleSheet, Text, Image, TouchableOpacity, View } from 'react-native'
 import theme from '../../assets/theme'
 
-export default function Tag({
-  leftImage,
-  rightImage,
-  title,
-  onPress,
-  index,
-  style,
-}) {
+export default function Tag({ leftImage, rightImage, title, onPress, style }) {
   const getContainerStyle = () => {
-    if (rightImage)
-      return [
-        styles.container,
-        styles.rightImage,
-        style,
-        index == 0 && { marginLeft: 0 },
-      ]
-    if (leftImage)
-      return [
-        styles.container,
-        styles.leftImage,
-        style,
-        index == 0 && { marginLeft: 0 },
-      ]
-    return [
-      styles.container,
-      styles.noImage,
-      style,
-      index == 0 && { marginLeft: 0 },
-    ]
+    if (rightImage) return [styles.container, styles.rightImage, style]
+    if (leftImage) return [styles.container, styles.leftImage, style]
+    return [styles.container, styles.noImage, style]
   }
   return onPress ? (
     <TouchableOpacity style={getContainerStyle()} onPress={onPress}>
@@ -54,7 +30,6 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
     borderWidth: 1,
     borderRadius: 50,
-    marginLeft: 10,
   },
   rightImage: {
     paddingRight: 10,

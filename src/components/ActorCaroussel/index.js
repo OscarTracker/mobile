@@ -1,13 +1,11 @@
-import { StyleSheet, FlatList } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { getImage } from '../../apis/tmdb'
-import theme from '../../assets/theme'
 import ActorCard from '../ActorCard'
 
 export default function ActorCaroussel({ content }) {
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({ item }) => {
     return (
       <ActorCard
-        index={index}
         character={item.character}
         name={item.name}
         image={{
@@ -21,27 +19,11 @@ export default function ActorCaroussel({ content }) {
       horizontal
       showsHorizontalScrollIndicator={false}
       data={content}
-      renderItem={(item, index) => renderItem(item, index)}
+      renderItem={(item, index) => renderItem(item)}
       keyExtractor={(item) => item.credit_id}
+      ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+      ListHeaderComponent={() => <View style={{ width: 20 }} />}
+      ListFooterComponent={() => <View style={{ width: 20 }} />}
     />
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-  },
-
-  showMore: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 140,
-    flex: 1,
-    backgroundColor: theme.colors.spoiler,
-    borderRadius: 10,
-  },
-
-  showMoreText: {
-    color: theme.colors.text,
-  },
-})
